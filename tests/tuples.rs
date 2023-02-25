@@ -11,6 +11,8 @@ pub struct TuplesWorld {
   pub a: Tuple,
   pub a1: Tuple,
   pub a2: Tuple,
+  pub t1: Tuple,
+  pub t2: Tuple,
   pub p: Tuple,
   pub v: Tuple,
 }
@@ -24,22 +26,39 @@ fn set_a(world: &mut TuplesWorld, name: String, x: f64, y: f64, z: f64, w: f64) 
   }
 }
 
+#[given(regex = r"^(t1|t2) ← (point|vector)\((-?\d+.?\d*), (-?\d+.?\d*), (-?\d+.?\d*)\)$")]
+fn set_t(world: &mut TuplesWorld, name: String, r#type: String, x: f64, y: f64, z: f64) {
+  match (name.as_str(), r#type.as_str()) {
+    ("t1", "point") => world.t1 = Tuple::Point(Point(x, y, z)),
+    ("t2", "point") => world.t2 = Tuple::Point(Point(x, y, z)),
+    ("t1", "vector") => world.t1 = Tuple::Vector(Vector(x, y, z)),
+    ("t2", "vector") => world.t2 = Tuple::Vector(Vector(x, y, z)),
+    _ => unreachable!("This should not happen!"),
+  }
+}
+
 #[given(expr = r"p ← point\({float}, {float}, {float}\)")]
 fn set_p(world: &mut TuplesWorld, x: f64, y: f64, z: f64) {
   world.p = Tuple::Point(Point(x, y, z));
 }
 
-#[then(regex = r"^(a|a1|a2) ([\+-]) (a|a1|a2) = tuple\((-?\d+.?\d*), (-?\d+.?\d*), (-?\d+.?\d*), (-?\d+.?\d*)\)$")]
+#[then(regex = r"^(a|a1|a2|t1|t2) ([\+-]) (a|a1|a2|t1|t2) = tuple\((-?\d+.?\d*), (-?\d+.?\d*), (-?\d+.?\d*), (-?\d+.?\d*)\)$")]
 fn x_op_y_equals_z(world: &mut TuplesWorld, name1: String, op: String, name2: String, x: f64, y: f64, z: f64, w: f64) {
   let lhs = match name1.as_str() {
+    "a" => world.a,
     "a1" => world.a1,
     "a2" => world.a2,
-    _ => world.a,
+    "t1" => world.t1,
+    "t2" => world.t2,
+    _ => unreachable!("This should not happen!"),
   };
   let rhs = match name2.as_str() {
+    "a" => world.a,
     "a1" => world.a1,
     "a2" => world.a2,
-    _ => world.a,
+    "t1" => world.t1,
+    "t2" => world.t2,
+    _ => unreachable!("This should not happen!"),
   };
   assert!(lhs.is_point() || lhs.is_vector());
   assert!(rhs.is_point() || rhs.is_vector());
@@ -57,6 +76,39 @@ fn x_op_y_equals_z(world: &mut TuplesWorld, name1: String, op: String, name2: St
     (_, _, _) => unreachable!("Unknown operation: {} {} {}", name1, op, name2),
   };
   assert_eq!(result, Tuple::new(x, y, z, w));
+}
+
+#[then(regex = r"^(a|a1|a2|t1|t2) \* (-?\d+.?\d*) = tuple\((-?\d+.?\d*), (-?\d+.?\d*), (-?\d+.?\d*), (-?\d+.?\d*)\)$")]
+fn x_mul_y_equals_z(world: &mut TuplesWorld, name: String, rhs: f64, x: f64, y: f64, z: f64, w: f64) {
+  let lhs = match name.as_str() {
+    "a" => world.a,
+    "a1" => world.a1,
+    "a2" => world.a2,
+    "t1" => world.t1,
+    "t2" => world.t2,
+    _ => unreachable!("This should not happen!"),
+  };
+  assert!(lhs.is_point() || lhs.is_vector());
+  assert_eq!(lhs * rhs, Tuple::new(x, y, z, w));
+}
+
+#[then(regex = r"^(a|a1|a2|t1|t2) / (-?\d+.?\d*) = tuple\((-?\d+.?\d*), (-?\d+.?\d*), (-?\d+.?\d*), (-?\d+.?\d*)\)$")]
+fn x_div_y_equals_z(world: &mut TuplesWorld, name: String, rhs: f64, x: f64, y: f64, z: f64, w: f64) {
+  let lhs = match name.as_str() {
+    "a" => world.a,
+    "a1" => world.a1,
+    "a2" => world.a2,
+    "t1" => world.t1,
+    "t2" => world.t2,
+    _ => unreachable!("This should not happen!"),
+  };
+  assert!(lhs.is_point() || lhs.is_vector());
+  assert_eq!(lhs / rhs, Tuple::new(x, y, z, w));
+}
+
+#[then(expr = r"-a = tuple\({float}, {float}, {float}, {float}\)")]
+fn check_neg_a_equality(world: &mut TuplesWorld, x: f64, y: f64, z: f64, w: f64) {
+  assert_eq!(-world.a, Tuple::new(x, y, z, w), "{:?} = tuple({}, {}, {}, {})", -world.a, x, y, z, w); 
 }
 
 #[then(expr = r"p = tuple\({float}, {float}, {float}, {float}\)")]

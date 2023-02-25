@@ -1,4 +1,6 @@
 use std::ops::Add;
+use std::ops::Div;
+use std::ops::Mul;
 use std::ops::Neg;
 use std::ops::Sub;
 
@@ -110,6 +112,30 @@ impl Neg for Tuple {
     match self {
       Tuple::Point(Point(x, y, z)) => Tuple::Point(-Point(x, y, z)),
       Tuple::Vector(Vector(x, y, z)) => Tuple::Vector(-Vector(x, y, z)),
+      _ => Tuple::None,
+    }
+  }
+}
+
+impl Mul<f64> for Tuple {
+  type Output = Self;
+
+  fn mul(self, other: f64) -> Self {
+    match self {
+      Tuple::Point(point) => Tuple::Point(point * other),
+      Tuple::Vector(vector) => Tuple::Vector(vector * other),
+      _ => Tuple::None,
+    }
+  }
+}
+
+impl Div<f64> for Tuple {
+  type Output = Self;
+
+  fn div(self, other: f64) -> Self {
+    match self {
+      Tuple::Point(point) => Tuple::Point(point / other),
+      Tuple::Vector(vector) => Tuple::Vector(vector / other),
       _ => Tuple::None,
     }
   }

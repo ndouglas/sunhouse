@@ -1,4 +1,6 @@
 use std::ops::Add;
+use std::ops::Div;
+use std::ops::Mul;
 use std::ops::Neg;
 use std::ops::Sub;
 use crate::vector::Vector;
@@ -50,5 +52,21 @@ impl Sub<Vector> for Point {
 
   fn sub(self, other: Vector) -> Self {
     Point(self.0 - other.0, self.1 - other.1, self.2 - other.2)
+  }
+}
+
+impl Div<f64> for Point {
+  type Output = Self;
+
+  fn div(self, other: f64) -> Self {
+    Point(self.0 / other, self.1 / other, self.2 / other)
+  }
+}
+
+impl Mul<f64> for Point {
+  type Output = Self;
+
+  fn mul(self, other: f64) -> Self {
+    Point(self.0 * other, self.1 * other, self.2 * other)
   }
 }
