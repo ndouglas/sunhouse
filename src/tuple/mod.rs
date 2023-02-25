@@ -35,26 +35,16 @@ impl Tuple {
   }
 
   pub fn is_point(self) -> bool {
-    match self {
-      Tuple::Point(_) => true,
-      _ => false,
-    }
+    matches!(self, Tuple::Point(_))
   }
 
   pub fn is_vector(self) -> bool {
-    match self {
-      Tuple::Vector(_) => true,
-      _ => false,
-    }
+    matches!(self, Tuple::Vector(_))
   }
 
   pub fn is_none(self) -> bool {
-    match self {
-      Tuple::None => true,
-      _ => false,
-    }
+    matches!(self, Tuple::None)
   }
-
 }
 
 impl From<Point> for Tuple {
@@ -90,16 +80,16 @@ impl Sub for Tuple {
     match (self, other) {
       (Tuple::Point(Point(x1, y1, z1)), Tuple::Point(Point(x2, y2, z2))) => {
         Tuple::Vector(Vector(x1 - x2, y1 - y2, z1 - z2))
-      }
+      },
       (Tuple::Vector(Vector(x1, y1, z1)), Tuple::Vector(Vector(x2, y2, z2))) => {
         Tuple::Vector(Vector(x1 - x2, y1 - y2, z1 - z2))
-      }
+      },
       (Tuple::Point(Point(x1, y1, z1)), Tuple::Vector(Vector(x2, y2, z2))) => {
         Tuple::Point(Point(x1 - x2, y1 - y2, z1 - z2))
-      }
+      },
       (Tuple::Vector(Vector(x1, y1, z1)), Tuple::Point(Point(x2, y2, z2))) => {
         Tuple::Vector(Vector(x1 - x2, y1 - y2, z1 - z2))
-      }
+      },
       _ => Tuple::None,
     }
   }

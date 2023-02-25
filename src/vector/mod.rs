@@ -1,9 +1,9 @@
+use crate::point::Point;
 use std::ops::Add;
 use std::ops::Div;
 use std::ops::Mul;
 use std::ops::Neg;
 use std::ops::Sub;
-use crate::point::Point;
 
 /// A three-dimensional vector.
 #[derive(Clone, Copy, Debug, Default, PartialEq, PartialOrd)]

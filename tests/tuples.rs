@@ -1,3 +1,4 @@
+#[allow(clippy::too_many_arguments)]
 use assert_approx_eq::assert_approx_eq;
 use cucumber::{given, then, when, World};
 use sunhouse::color::Color;
@@ -60,7 +61,9 @@ fn set_p(world: &mut TuplesWorld, x: f64, y: f64, z: f64) {
   world.p = Tuple::Point(Point(x, y, z));
 }
 
-#[then(regex = r"^(a|a1|a2|t1|t2) ([\+-]) (a|a1|a2|t1|t2) = tuple\((-?\d+.?\d*), (-?\d+.?\d*), (-?\d+.?\d*), (-?\d+.?\d*)\)$")]
+#[then(
+  regex = r"^(a|a1|a2|t1|t2) ([\+-]) (a|a1|a2|t1|t2) = tuple\((-?\d+.?\d*), (-?\d+.?\d*), (-?\d+.?\d*), (-?\d+.?\d*)\)$"
+)]
 fn x_op_y_equals_z(world: &mut TuplesWorld, name1: String, op: String, name2: String, x: f64, y: f64, z: f64, w: f64) {
   let lhs = match name1.as_str() {
     "a" => world.a,
@@ -126,12 +129,30 @@ fn x_div_y_equals_z(world: &mut TuplesWorld, name: String, rhs: f64, x: f64, y: 
 
 #[then(expr = r"-a = tuple\({float}, {float}, {float}, {float}\)")]
 fn check_neg_a_equality(world: &mut TuplesWorld, x: f64, y: f64, z: f64, w: f64) {
-  assert_eq!(-world.a, Tuple::new(x, y, z, w), "{:?} = tuple({}, {}, {}, {})", -world.a, x, y, z, w); 
+  assert_eq!(
+    -world.a,
+    Tuple::new(x, y, z, w),
+    "{:?} = tuple({}, {}, {}, {})",
+    -world.a,
+    x,
+    y,
+    z,
+    w
+  );
 }
 
 #[then(expr = r"p = tuple\({float}, {float}, {float}, {float}\)")]
 fn check_p_equality(world: &mut TuplesWorld, x: f64, y: f64, z: f64, w: f64) {
-  assert_eq!(world.p, Tuple::new(x, y, z, w), "{:?} = tuple({}, {}, {}, {})", world.p, x, y, z, w); 
+  assert_eq!(
+    world.p,
+    Tuple::new(x, y, z, w),
+    "{:?} = tuple({}, {}, {}, {})",
+    world.p,
+    x,
+    y,
+    z,
+    w
+  );
 }
 
 #[given(expr = r"v ← vector\({float}, {float}, {float}\)")]
@@ -141,7 +162,16 @@ fn set_v(world: &mut TuplesWorld, x: f64, y: f64, z: f64) {
 
 #[then(expr = r"v = tuple\({float}, {float}, {float}, {float}\)")]
 fn check_v_equality(world: &mut TuplesWorld, x: f64, y: f64, z: f64, w: f64) {
-  assert_eq!(world.v, Tuple::new(x, y, z, w), "{:?} = tuple({}, {}, {}, {})", world.p, x, y, z, w); 
+  assert_eq!(
+    world.v,
+    Tuple::new(x, y, z, w),
+    "{:?} = tuple({}, {}, {}, {})",
+    world.p,
+    x,
+    y,
+    z,
+    w
+  );
 }
 
 #[then(expr = r"magnitude\(v\) = {float}")]
@@ -210,20 +240,19 @@ fn tuple_property_equals(world: &mut TuplesWorld, key: String, value: f64) {
 
 #[then(regex = r"a is( not)? a (point|vector)")]
 fn a_is_a(world: &mut TuplesWorld, not: String, r#type: String) {
-  let is_a = not == "";
+  let is_a = not.is_empty();
   if is_a {
     match r#type.as_str() {
-      "point" => assert!(world.a.is_point(),  "a is not a point when it should be"),
+      "point" => assert!(world.a.is_point(), "a is not a point when it should be"),
       "vector" => assert!(world.a.is_vector(), "a is not a vector when it should be"),
       _ => panic!("Unknown type: {}", r#type),
-    }  
-  }
-  else {
+    }
+  } else {
     match r#type.as_str() {
-      "point" => assert!(!world.a.is_point(),  "a is a point when it should not be"),
+      "point" => assert!(!world.a.is_point(), "a is a point when it should not be"),
       "vector" => assert!(!world.a.is_vector(), "a is a vector when it should not be"),
       _ => panic!("Unknown type: {}", r#type),
-    }  
+    }
   }
 }
 
