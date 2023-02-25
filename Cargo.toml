@@ -1,0 +1,31 @@
+[package]
+name = "sunhouse"
+version = "0.1.0"
+edition = "2021"
+authors = ["Nathan Douglas <github@darkdell.net>"]
+license = "Unlicense"
+homepage = "https://ndouglas.github.io/sunhouse/"
+repository = "https://github.com/ndouglas/sunhouse/"
+documentation = "https://ndouglas.github.io/sunhouse/"
+readme = "README.md"
+keywords = ["sunhouse"]
+default-run = "sunhouse"
+
+[lib]
+name = "sunhouse"
+path = "src/lib.rs"
+
+[[bin]]
+name = "sunhouse"
+path = "src/main.rs"
+
+[dependencies]
+
+[dev-dependencies]
+assert_approx_eq = "1.1"
+cucumber = "0.19.1"
+futures = "0.3"
+
+[[test]]
+name = "tuples"
+harness = false
