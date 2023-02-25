@@ -1,5 +1,6 @@
 use assert_approx_eq::assert_approx_eq;
-use cucumber::{given, then, World};
+use cucumber::{given, then, when, World};
+use sunhouse::color::Color;
 use sunhouse::point::Point;
 use sunhouse::tuple::Tuple;
 use sunhouse::vector::Vector;
@@ -13,16 +14,33 @@ pub struct TuplesWorld {
   pub a2: Tuple,
   pub t1: Tuple,
   pub t2: Tuple,
+  pub b: Tuple,
+  pub c: Color,
+  pub c1: Color,
+  pub c2: Color,
   pub p: Tuple,
   pub v: Tuple,
 }
 
-#[given(regex = r"^(a|a1|a2) ← tuple\((-?\d+.?\d*), (-?\d+.?\d*), (-?\d+.?\d*), (-?\d+.?\d*)\)$")]
+#[given(regex = r"^(a|a1|a2|b) ← tuple\((-?\d+.?\d*), (-?\d+.?\d*), (-?\d+.?\d*), (-?\d+.?\d*)\)$")]
 fn set_a(world: &mut TuplesWorld, name: String, x: f64, y: f64, z: f64, w: f64) {
   match name.as_str() {
+    "a" => world.a = Tuple::new(x, y, z, w),
     "a1" => world.a1 = Tuple::new(x, y, z, w),
     "a2" => world.a2 = Tuple::new(x, y, z, w),
-    _ => world.a = Tuple::new(x, y, z, w),
+    "b" => world.b = Tuple::new(x, y, z, w),
+    _ => unreachable!("This should not happen!"),
+  }
+}
+
+#[given(regex = r"^(a|a1|a2|b) ← vector\((-?\d+.?\d*), (-?\d+.?\d*), (-?\d+.?\d*)\)$")]
+fn set_a2(world: &mut TuplesWorld, name: String, x: f64, y: f64, z: f64) {
+  match name.as_str() {
+    "a" => world.a = Tuple::Vector(Vector(x, y, z)),
+    "a1" => world.a1 = Tuple::Vector(Vector(x, y, z)),
+    "a2" => world.a2 = Tuple::Vector(Vector(x, y, z)),
+    "b" => world.b = Tuple::Vector(Vector(x, y, z)),
+    _ => unreachable!("This should not happen!"),
   }
 }
 
@@ -126,6 +144,54 @@ fn check_v_equality(world: &mut TuplesWorld, x: f64, y: f64, z: f64, w: f64) {
   assert_eq!(world.v, Tuple::new(x, y, z, w), "{:?} = tuple({}, {}, {}, {})", world.p, x, y, z, w); 
 }
 
+#[then(expr = r"magnitude\(v\) = {float}")]
+fn check_v_magnitude(world: &mut TuplesWorld, expected: f64) {
+  let v = match world.v {
+    Tuple::Vector(v) => v,
+    _ => unreachable!("v is not a vector"),
+  };
+  assert_approx_eq!(v.magnitude(), expected, 0.001);
+}
+
+#[then(expr = r"magnitude\(v\) = √{float}")]
+fn check_v_magnitude2(world: &mut TuplesWorld, expected: f64) {
+  let v = match world.v {
+    Tuple::Vector(v) => v,
+    _ => unreachable!("v is not a vector"),
+  };
+  assert_approx_eq!(v.magnitude(), expected.sqrt(), 0.001);
+}
+
+#[then(expr = r"normalize\(v\) =( approximately) vector\({float}, {float}, {float}\)")]
+fn check_v_normalize(world: &mut TuplesWorld, x: f64, y: f64, z: f64) {
+  let v = match world.v {
+    Tuple::Vector(v) => v,
+    _ => unreachable!("v is not a vector"),
+  };
+  let normalized = v.normalize();
+  assert_approx_eq!(normalized.0, x, 0.001);
+  assert_approx_eq!(normalized.1, y, 0.001);
+  assert_approx_eq!(normalized.2, z, 0.001);
+}
+
+#[when(expr = r"norm ← normalize\(v\)")]
+fn set_v_normalize(world: &mut TuplesWorld) {
+  let v = match world.v {
+    Tuple::Vector(v) => v,
+    _ => unreachable!("v is not a vector"),
+  };
+  world.v = Tuple::Vector(v.normalize());
+}
+
+#[then(expr = r"magnitude\(norm\) = {float}")]
+fn check_magnitude_norm(world: &mut TuplesWorld, expected: f64) {
+  let v = match world.v {
+    Tuple::Vector(v) => v,
+    _ => unreachable!("v is not a vector"),
+  };
+  assert_approx_eq!(v.magnitude(), expected, 0.001);
+}
+
 #[then(regex = r"^a.(w|x|y|z) = (-?\d+.?\d*)$")]
 fn tuple_property_equals(world: &mut TuplesWorld, key: String, value: f64) {
   let (x, y, z, w) = match world.a {
@@ -159,6 +225,112 @@ fn a_is_a(world: &mut TuplesWorld, not: String, r#type: String) {
       _ => panic!("Unknown type: {}", r#type),
     }  
   }
+}
+
+#[then(regex = r"^dot\(a, ?b\) = (-?\d+.?\d*)$")]
+fn check_dot_product(world: &mut TuplesWorld, expected: f64) {
+  let a = match world.a {
+    Tuple::Vector(v) => v,
+    _ => unreachable!("a is not a vector"),
+  };
+  let b = match world.b {
+    Tuple::Vector(v) => v,
+    _ => unreachable!("b is not a vector"),
+  };
+  assert_approx_eq!(a.dot(b), expected, 0.001);
+}
+
+#[then(regex = r"^cross\((a|b), ?(a|b)\) = vector\((-?\d+.?\d*), (-?\d+.?\d*), (-?\d+.?\d*)\)$")]
+fn check_cross_product(world: &mut TuplesWorld, name1: String, name2: String, x: f64, y: f64, z: f64) {
+  let lhs = match name1.as_str() {
+    "a" => match world.a {
+      Tuple::Vector(v) => v,
+      _ => unreachable!("a is not a vector"),
+    },
+    "b" => match world.b {
+      Tuple::Vector(v) => v,
+      _ => unreachable!("b is not a vector"),
+    },
+    x => unreachable!("Unexpected property name: {}", x),
+  };
+  let rhs = match name2.as_str() {
+    "a" => match world.a {
+      Tuple::Vector(v) => v,
+      _ => unreachable!("a is not a vector"),
+    },
+    "b" => match world.b {
+      Tuple::Vector(v) => v,
+      _ => unreachable!("b is not a vector"),
+    },
+    x => unreachable!("Unexpected property name: {}", x),
+  };
+  let actual = lhs.cross(rhs);
+  let expected = Vector(x, y, z);
+  assert_approx_eq!(actual.0, expected.0, 0.001);
+  assert_approx_eq!(actual.1, expected.1, 0.001);
+  assert_approx_eq!(actual.2, expected.2, 0.001);
+}
+
+#[given(regex = r"^(c|c1|c2) ← color\((-?\d+.?\d*), (-?\d+.?\d*), (-?\d+.?\d*)\)$")]
+fn set_c(world: &mut TuplesWorld, name: String, x: f64, y: f64, z: f64) {
+  match name.as_str() {
+    "c" => world.c = Color(x, y, z),
+    "c1" => world.c1 = Color(x, y, z),
+    "c2" => world.c2 = Color(x, y, z),
+    _ => unreachable!("Unexpected property name: {}", name),
+  }
+}
+
+#[then(regex = r"^c.(red|green|blue) = (-?\d+.?\d*)$")]
+fn check_color(world: &mut TuplesWorld, key: String, expected: f64) {
+  let Color(red, green, blue) = world.c;
+  match key.as_str() {
+    "red" => assert_approx_eq!(red, expected, 0.001),
+    "green" => assert_approx_eq!(green, expected, 0.001),
+    "blue" => assert_approx_eq!(blue, expected, 0.001),
+    _ => panic!("Unknown key: {}", key),
+  }
+}
+
+#[then(regex = r"^(c|c1|c2) ([\+\-\*]) (c|c1|c2) = color\((-?\d+.?\d*), (-?\d+.?\d*), (-?\d+.?\d*)\)$")]
+fn c_op_c_equals_z(world: &mut TuplesWorld, name1: String, op: String, name2: String, x: f64, y: f64, z: f64) {
+  let lhs = match name1.as_str() {
+    "c" => world.c,
+    "c1" => world.c1,
+    "c2" => world.c2,
+    _ => unreachable!("This should not happen!"),
+  };
+  let rhs = match name2.as_str() {
+    "c" => world.c,
+    "c1" => world.c1,
+    "c2" => world.c2,
+    _ => unreachable!("This should not happen!"),
+  };
+  let result = match (op.as_str(), lhs, rhs) {
+    ("+", color1, color2) => color1 + color2,
+    ("-", color1, color2) => color1 - color2,
+    ("*", color1, color2) => color1 * color2,
+    (_, _, _) => unreachable!("Unknown operation: {} {} {}", name1, op, name2),
+  };
+  assert_approx_eq!(result.0, x, 0.001);
+  assert_approx_eq!(result.1, y, 0.001);
+  assert_approx_eq!(result.2, z, 0.001);
+}
+
+#[then(regex = r"^(c|c1|c2) (\*|/) (-?\d+.?\d*) = color\((-?\d+.?\d*), (-?\d+.?\d*), (-?\d+.?\d*)\)$")]
+fn c_op_c_equals_z2(world: &mut TuplesWorld, name1: String, op: String, rhs: f64, x: f64, y: f64, z: f64) {
+  let lhs = match name1.as_str() {
+    "c" => world.c,
+    "c1" => world.c1,
+    "c2" => world.c2,
+    _ => unreachable!("This should not happen!"),
+  };
+  let result = match (op.as_str(), lhs, rhs) {
+    ("*", color1, rhs) => color1 * rhs,
+    ("/", color1, rhs) => color1 / rhs,
+    (_, _, _) => unreachable!("Unknown operation: {} {} {}", name1, op, rhs),
+  };
+  assert_eq!(result, Color(x, y, z));
 }
 
 // This runs before everything else, so you can setup things here.

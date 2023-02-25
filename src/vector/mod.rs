@@ -13,6 +13,27 @@ impl Vector {
   pub fn abs(self) -> Self {
     Vector(self.0.abs(), self.1.abs(), self.2.abs())
   }
+
+  pub fn magnitude(self) -> f64 {
+    (self.0.powi(2) + self.1.powi(2) + self.2.powi(2)).sqrt()
+  }
+
+  pub fn normalize(self) -> Self {
+    let magnitude = self.magnitude();
+    Vector(self.0 / magnitude, self.1 / magnitude, self.2 / magnitude)
+  }
+
+  pub fn dot(self, other: Self) -> f64 {
+    self.0 * other.0 + self.1 * other.1 + self.2 * other.2
+  }
+
+  pub fn cross(self, other: Self) -> Self {
+    Vector(
+      self.1 * other.2 - self.2 * other.1,
+      self.2 * other.0 - self.0 * other.2,
+      self.0 * other.1 - self.1 * other.0,
+    )
+  }
 }
 
 impl Add for Vector {
