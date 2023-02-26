@@ -6,7 +6,7 @@ use sunhouse::point::Point;
 use sunhouse::tuple::Tuple;
 use sunhouse::vector::Vector;
 
-// `World` is your shared, likely mutable state.
+// `TuplesWorld` is your shared, likely mutable state.
 // Cucumber constructs it via `Default::default()` for each scenario.
 #[derive(Debug, Default, World)]
 pub struct TuplesWorld {
@@ -301,11 +301,11 @@ fn check_cross_product(world: &mut TuplesWorld, name1: String, name2: String, x:
 }
 
 #[given(regex = r"^(c|c1|c2) ← color\((-?\d+.?\d*), (-?\d+.?\d*), (-?\d+.?\d*)\)$")]
-fn set_c(world: &mut TuplesWorld, name: String, x: f64, y: f64, z: f64) {
+fn set_c(world: &mut TuplesWorld, name: String, r: f64, g: f64, b: f64) {
   match name.as_str() {
-    "c" => world.c = Color(x, y, z),
-    "c1" => world.c1 = Color(x, y, z),
-    "c2" => world.c2 = Color(x, y, z),
+    "c" => world.c = Color(r, g, b),
+    "c1" => world.c1 = Color(r, g, b),
+    "c2" => world.c2 = Color(r, g, b),
     _ => unreachable!("Unexpected property name: {}", name),
   }
 }
@@ -322,7 +322,7 @@ fn check_color(world: &mut TuplesWorld, key: String, expected: f64) {
 }
 
 #[then(regex = r"^(c|c1|c2) ([\+\-\*]) (c|c1|c2) = color\((-?\d+.?\d*), (-?\d+.?\d*), (-?\d+.?\d*)\)$")]
-fn c_op_c_equals_z(world: &mut TuplesWorld, name1: String, op: String, name2: String, x: f64, y: f64, z: f64) {
+fn c_op_c_equals_z(world: &mut TuplesWorld, name1: String, op: String, name2: String, r: f64, g: f64, b: f64) {
   let lhs = match name1.as_str() {
     "c" => world.c,
     "c1" => world.c1,
@@ -341,13 +341,13 @@ fn c_op_c_equals_z(world: &mut TuplesWorld, name1: String, op: String, name2: St
     ("*", color1, color2) => color1 * color2,
     (_, _, _) => unreachable!("Unknown operation: {} {} {}", name1, op, name2),
   };
-  assert_approx_eq!(result.0, x, 0.001);
-  assert_approx_eq!(result.1, y, 0.001);
-  assert_approx_eq!(result.2, z, 0.001);
+  assert_approx_eq!(result.0, r, 0.001);
+  assert_approx_eq!(result.1, g, 0.001);
+  assert_approx_eq!(result.2, b, 0.001);
 }
 
 #[then(regex = r"^(c|c1|c2) (\*|/) (-?\d+.?\d*) = color\((-?\d+.?\d*), (-?\d+.?\d*), (-?\d+.?\d*)\)$")]
-fn c_op_c_equals_z2(world: &mut TuplesWorld, name1: String, op: String, rhs: f64, x: f64, y: f64, z: f64) {
+fn c_op_c_equals_z2(world: &mut TuplesWorld, name1: String, op: String, rhs: f64, r: f64, g: f64, b: f64) {
   let lhs = match name1.as_str() {
     "c" => world.c,
     "c1" => world.c1,
@@ -359,7 +359,7 @@ fn c_op_c_equals_z2(world: &mut TuplesWorld, name1: String, op: String, rhs: f64
     ("/", color1, rhs) => color1 / rhs,
     (_, _, _) => unreachable!("Unknown operation: {} {} {}", name1, op, rhs),
   };
-  assert_eq!(result, Color(x, y, z));
+  assert_eq!(result, Color(r, g, b));
 }
 
 // This runs before everything else, so you can setup things here.

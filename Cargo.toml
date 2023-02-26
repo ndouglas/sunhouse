@@ -29,3 +29,7 @@ futures = "0.3"
 [[test]]
 name = "tuples"
 harness = false
+
+[[test]]
+name = "canvas"
+harness = false
