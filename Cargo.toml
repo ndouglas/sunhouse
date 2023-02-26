@@ -33,3 +33,7 @@ harness = false
 [[test]]
 name = "canvas"
 harness = false
+
+[[test]]
+name = "matrices"
+harness = false

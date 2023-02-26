@@ -6,13 +6,13 @@ Progress:
 - [x] Tuples, Points, and Vectors
   - [x] Tuples
   - [x] Operations
-- [ ] Drawing on a Canvas
+- [x] Drawing on a Canvas
   - [x] Representing Colors
   - [x] Implementing Color Operations
-  - [ ] Creating a Canvas
-  - [ ] Saving a Canvas
+  - [x] Creating a Canvas
+  - [x] Saving a Canvas
 - [ ] Matrices
-  - [ ] Creating a Matrix
+  - [x] Creating a Matrix
   - [ ] Multiplying Matrices
   - [ ] The Identity Matrix
   - [ ] Transposing Matrices
