@@ -1,6 +1,4 @@
 #[allow(clippy::too_many_arguments)]
-use assert_approx_eq::assert_approx_eq;
-use cucumber::gherkin::Step;
 use cucumber::{given, then, when, World};
 use sunhouse::matrix::Matrix;
 use sunhouse::point::Point;
