@@ -11,12 +11,12 @@ Progress:
   - [x] Implementing Color Operations
   - [x] Creating a Canvas
   - [x] Saving a Canvas
-- [ ] Matrices
+- [x] Matrices
   - [x] Creating a Matrix
-  - [ ] Multiplying Matrices
-  - [ ] The Identity Matrix
-  - [ ] Transposing Matrices
-  - [ ] Inverting Matrices
+  - [x] Multiplying Matrices
+  - [x] The Identity Matrix
+  - [x] Transposing Matrices
+  - [x] Inverting Matrices
 - [ ] Matrix Transformations
   - [ ] Translation
   - [ ] Scaling
