@@ -83,6 +83,84 @@ impl Matrix4x4 {
     }
     result
   }
+
+  pub fn translation(x: f64, y: f64, z: f64) -> Self {
+    let mut result = Matrix4x4::identity();
+    result.0[0][3] = x;
+    result.0[1][3] = y;
+    result.0[2][3] = z;
+    result
+  }
+
+  pub fn scaling(x: f64, y: f64, z: f64) -> Self {
+    let mut result = Matrix4x4::identity();
+    result.0[0][0] = x;
+    result.0[1][1] = y;
+    result.0[2][2] = z;
+    result
+  }
+
+  pub fn rotation_x(radians: f64) -> Self {
+    let mut result = Matrix4x4::identity();
+    result.0[1][1] = radians.cos();
+    result.0[1][2] = -radians.sin();
+    result.0[2][1] = radians.sin();
+    result.0[2][2] = radians.cos();
+    result
+  }
+
+  pub fn rotation_y(radians: f64) -> Self {
+    let mut result = Matrix4x4::identity();
+    result.0[0][0] = radians.cos();
+    result.0[0][2] = radians.sin();
+    result.0[2][0] = -radians.sin();
+    result.0[2][2] = radians.cos();
+    result
+  }
+
+  pub fn rotation_z(radians: f64) -> Self {
+    let mut result = Matrix4x4::identity();
+    result.0[0][0] = radians.cos();
+    result.0[0][1] = -radians.sin();
+    result.0[1][0] = radians.sin();
+    result.0[1][1] = radians.cos();
+    result
+  }
+
+  pub fn shearing(xy: f64, xz: f64, yx: f64, yz: f64, zx: f64, zy: f64) -> Self {
+    let mut result = Matrix4x4::identity();
+    result.0[0][1] = xy;
+    result.0[0][2] = xz;
+    result.0[1][0] = yx;
+    result.0[1][2] = yz;
+    result.0[2][0] = zx;
+    result.0[2][1] = zy;
+    result
+  }
+
+  pub fn view_transform(from: Point, to: Point, dir: Vector) -> Self {
+    let forward = (to - from).normalize();
+    let dirn = dir.normalize();
+    let left = forward.cross(dirn);
+    let true_dir = left.cross(forward);
+    let orientation = Matrix4x4([
+      [left.0, left.1, left.2, 0.0],
+      [true_dir.0, true_dir.1, true_dir.2, 0.0],
+      [-forward.0, -forward.1, -forward.2, 0.0],
+      [0.0, 0.0, 0.0, 1.0],
+    ]);
+    orientation * Matrix4x4::translation(-from.0, -from.1, -from.2)
+  }
+
+  pub fn from_rows(rows: Vec<Vec<f64>>) -> Self {
+    let mut result = Matrix4x4::default();
+    for i in 0..4 {
+      for j in 0..4 {
+        result.0[i][j] = rows[i][j];
+      }
+    }
+    result
+  }
 }
 
 impl Mul for Matrix4x4 {

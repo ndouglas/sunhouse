@@ -1,4 +1,6 @@
+use crate::point::Point;
 use crate::tuple::Tuple;
+use crate::vector::Vector;
 use std::ops::Mul;
 
 pub mod m2x2;
@@ -103,6 +105,47 @@ impl Matrix {
       Matrix::None => panic!("Matrix is None!"),
     }
   }
+
+  pub fn translation(x: f64, y: f64, z: f64) -> Self {
+    Matrix::Matrix4x4(Matrix4x4::translation(x, y, z))
+  }
+
+  pub fn scaling(x: f64, y: f64, z: f64) -> Self {
+    Matrix::Matrix4x4(Matrix4x4::scaling(x, y, z))
+  }
+
+  pub fn rotation_x(r: f64) -> Self {
+    Matrix::Matrix4x4(Matrix4x4::rotation_x(r))
+  }
+
+  pub fn rotation_y(r: f64) -> Self {
+    Matrix::Matrix4x4(Matrix4x4::rotation_y(r))
+  }
+
+  pub fn rotation_z(r: f64) -> Self {
+    Matrix::Matrix4x4(Matrix4x4::rotation_z(r))
+  }
+
+  pub fn shearing(xy: f64, xz: f64, yx: f64, yz: f64, zx: f64, zy: f64) -> Self {
+    Matrix::Matrix4x4(Matrix4x4::shearing(xy, xz, yx, yz, zx, zy))
+  }
+
+  pub fn view_transform(from: Point, to: Point, dir: Vector) -> Self {
+    Matrix::Matrix4x4(Matrix4x4::view_transform(from, to, dir))
+  }
+
+  pub fn identity() -> Self {
+    Matrix::Matrix4x4(Matrix4x4::identity())
+  }
+
+  pub fn from_rows(rows: Vec<Vec<f64>>) -> Self {
+    match rows.len() {
+      2 => Matrix::Matrix2x2(Matrix2x2::from_rows(rows)),
+      3 => Matrix::Matrix3x3(Matrix3x3::from_rows(rows)),
+      4 => Matrix::Matrix4x4(Matrix4x4::from_rows(rows)),
+      _ => panic!("Matrix must have 2, 3, or 4 rows!"),
+    }
+  }
 }
 
 impl Mul for Matrix {
@@ -127,6 +170,28 @@ impl Mul<Tuple> for Matrix {
       Matrix::Matrix3x3(m) => m * rhs,
       Matrix::Matrix4x4(m) => m * rhs,
       Matrix::None => panic!("Matrix is None!"),
+    }
+  }
+}
+
+impl Mul<Point> for Matrix {
+  type Output = Point;
+
+  fn mul(self, rhs: Point) -> Point {
+    match self * Tuple::from(rhs) {
+      Tuple::Point(p) => p,
+      _ => panic!("Cannot multiply a matrix by this point"),
+    }
+  }
+}
+
+impl Mul<Vector> for Matrix {
+  type Output = Vector;
+
+  fn mul(self, rhs: Vector) -> Vector {
+    match self * Tuple::from(rhs) {
+      Tuple::Vector(v) => v,
+      _ => panic!("Cannot multiply a matrix by this vector"),
     }
   }
 }

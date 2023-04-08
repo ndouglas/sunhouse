@@ -54,6 +54,16 @@ impl Matrix2x2 {
     }
     result
   }
+
+  pub fn from_rows(rows: Vec<Vec<f64>>) -> Self {
+    let mut result = Matrix2x2::default();
+    for i in 0..2 {
+      for j in 0..2 {
+        result.0[i][j] = rows[i][j];
+      }
+    }
+    result
+  }
 }
 
 impl Mul for Matrix2x2 {

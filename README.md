@@ -17,12 +17,12 @@ Progress:
   - [x] The Identity Matrix
   - [x] Transposing Matrices
   - [x] Inverting Matrices
-- [ ] Matrix Transformations
-  - [ ] Translation
-  - [ ] Scaling
-  - [ ] Rotation
-  - [ ] Shearing
-  - [ ] Chaining Transformations
+- [x] Matrix Transformations
+  - [x] Translation
+  - [x] Scaling
+  - [x] Rotation
+  - [x] Shearing
+  - [x] Chaining Transformations
 - [ ] Ray-Sphere Intersections
   - [ ] Creating Rays
   - [ ] Intersecting Rays With Spheres

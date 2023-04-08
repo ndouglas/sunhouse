@@ -146,6 +146,16 @@ impl Matrix3x3 {
   pub fn is_invertible(&self) -> bool {
     self.determinant() != 0.0
   }
+
+  pub fn from_rows(rows: Vec<Vec<f64>>) -> Self {
+    let mut result = Matrix3x3::default();
+    for i in 0..3 {
+      for j in 0..3 {
+        result.0[i][j] = rows[i][j];
+      }
+    }
+    result
+  }
 }
 
 impl Mul for Matrix3x3 {
