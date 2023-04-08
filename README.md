@@ -23,8 +23,8 @@ Progress:
   - [x] Rotation
   - [x] Shearing
   - [x] Chaining Transformations
-- [ ] Ray-Sphere Intersections
-  - [ ] Creating Rays
+- [x] Ray-Sphere Intersections
+  - [x] Creating Rays
   - [ ] Intersecting Rays With Spheres
   - [ ] Tracking Intersections
   - [ ] Identifying Hits
