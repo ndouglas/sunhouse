@@ -19,7 +19,9 @@ pub struct TuplesWorld {
   pub c: Color,
   pub c1: Color,
   pub c2: Color,
+  pub n: Vector,
   pub p: Tuple,
+  pub r: Tuple,
   pub v: Tuple,
 }
 
@@ -360,6 +362,33 @@ fn c_op_c_equals_z2(world: &mut TuplesWorld, name1: String, op: String, rhs: f64
     (_, _, _) => unreachable!("Unknown operation: {} {} {}", name1, op, rhs),
   };
   assert_eq!(result, Color(r, g, b));
+}
+
+#[given(regex = r"^n ← vector\((-?\d+.?\d*), (-?\d+.?\d*), (-?\d+.?\d*)\)$")]
+fn set_n(world: &mut TuplesWorld, x: f64, y: f64, z: f64) {
+  world.n = Vector(x, y, z);
+}
+
+#[given(regex = r"^n ← vector\(√2/2, √2/2, 0\)$")]
+fn set_n2(world: &mut TuplesWorld) {
+  world.n = Vector(2.0_f64.sqrt() / 2.0, 2.0_f64.sqrt() / 2.0, 0.0);
+}
+
+#[when(regex = r"^r ← reflect\(v, n\)$")]
+fn set_r(world: &mut TuplesWorld) {
+  world.r = world.v.reflect(world.n);
+}
+
+#[then(regex = r"^r = vector\((-?\d+.?\d*), (-?\d+.?\d*), (-?\d+.?\d*)\)$")]
+fn check_r(world: &mut TuplesWorld, x: f64, y: f64, z: f64) {
+  if let Tuple::Vector(actual) = world.r {
+    let expected = Vector(x, y, z);
+    assert_approx_eq!(actual.0, expected.0, 0.001);
+    assert_approx_eq!(actual.1, expected.1, 0.001);
+    assert_approx_eq!(actual.2, expected.2, 0.001);
+  } else {
+    panic!("r is not a vector");
+  }
 }
 
 // This runs before everything else, so you can setup things here.

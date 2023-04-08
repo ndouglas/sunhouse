@@ -45,6 +45,18 @@ impl Tuple {
   pub fn is_none(self) -> bool {
     matches!(self, Tuple::None)
   }
+
+  pub fn reflect(self, normal: Vector) -> Self {
+    self - Tuple::Vector(normal * 2.0 * self.dot(normal))
+  }
+
+  pub fn dot(self, other: Vector) -> f64 {
+    match self {
+      Tuple::Point(Point(x1, y1, z1)) => x1 * other.0 + y1 * other.1 + z1 * other.2,
+      Tuple::Vector(Vector(x1, y1, z1)) => x1 * other.0 + y1 * other.1 + z1 * other.2,
+      Tuple::None => 0.0,
+    }
+  }
 }
 
 impl From<Point> for Tuple {
