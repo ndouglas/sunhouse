@@ -49,3 +49,11 @@ harness = false
 [[test]]
 name = "spheres"
 harness = false
+
+[[test]]
+name = "lights"
+harness = false
+
+[[test]]
+name = "materials"
+harness = false

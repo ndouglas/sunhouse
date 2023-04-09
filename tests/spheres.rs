@@ -2,6 +2,7 @@
 use assert_approx_eq::assert_approx_eq;
 use cucumber::{given, then, when, World};
 use sunhouse::intersection::Intersection;
+use sunhouse::material::Material;
 use sunhouse::matrix::Matrix;
 use sunhouse::object::Object;
 use sunhouse::point::Point;
@@ -13,6 +14,8 @@ use sunhouse::vector::Vector;
 // Cucumber constructs it via `Default::default()` for each scenario.
 #[derive(Debug, Default, World)]
 pub struct TestWorld {
+  m: Matrix,
+  material: Material,
   ray: Ray,
   shape: Sphere,
   sphere: Sphere,
@@ -144,6 +147,59 @@ fn n_is_normalize_n(world: &mut TestWorld) {
   let sqrt3 = 3.0_f64.sqrt();
   let x = sqrt3 / 3.0;
   assert_eq!(world.shape.normal_at(Point(x, x, x)), Vector(x, x, x).normalize());
+}
+
+#[given(regex = r#"^m ← scaling\((.*), (.*), (.*)\) \* rotation_z\(π/5\)$"#)]
+fn m_is_scaling_rotation_z(world: &mut TestWorld, x: f64, y: f64, z: f64) {
+  world.m = Matrix::scaling(x, y, z) * Matrix::rotation_z(std::f64::consts::PI / 5.0);
+}
+
+#[given(regex = r#"^set_transform\(s, m\)$"#)]
+fn set_transform_s_m(world: &mut TestWorld) {
+  world.sphere.transform = world.m;
+}
+
+#[when(regex = r#"^n ← normal_at\(s, point\(0, √2/2, -√2/2\)\)$"#)]
+fn n_is_normal_at_point2(world: &mut TestWorld) {
+  world
+    .shape
+    .normal_at(Point(0.0, 2.0_f64.sqrt() / 2.0, -2.0_f64.sqrt() / 2.0));
+}
+
+#[when(regex = r#"^m ← s.material$"#)]
+fn m_is_s_material(world: &mut TestWorld) {
+  world.material = world.sphere.material;
+}
+
+#[then(regex = r#"^m = material\(\)$"#)]
+fn m_is_material(world: &mut TestWorld) {
+  assert_eq!(world.material, Material::default());
+}
+
+#[given(regex = r#"^m ← material\(\)$"#)]
+fn m_is_default_material(world: &mut TestWorld) {
+  world.material = Material::default();
+}
+
+#[given(regex = r#"^m\.ambient ← (.*)$"#)]
+#[when(regex = r#"^m\.ambient ← (.*)$"#)]
+fn m_ambient_is(world: &mut TestWorld, x: f64) {
+  world.material.ambient = x;
+}
+
+#[given(regex = r#"^s ← glass_sphere\(\)$"#)]
+fn s_is_glass_sphere(world: &mut TestWorld) {
+  world.sphere = Sphere::glass();
+}
+
+#[when(regex = r#"^s.material ← m$"#)]
+fn s_material_is_m(world: &mut TestWorld) {
+  world.sphere.material = world.material;
+}
+
+#[then(regex = r#"^s\.material = m$"#)]
+fn s_material_is(world: &mut TestWorld) {
+  assert_eq!(world.sphere.material, world.material);
 }
 
 // This runs before everything else, so you can setup things here.

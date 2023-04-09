@@ -1,4 +1,5 @@
 use crate::intersection::Intersection;
+use crate::material::Material;
 use crate::matrix::Matrix;
 use crate::object::Object;
 use crate::point::Point;
@@ -11,6 +12,7 @@ pub struct Sphere {
   pub center: Point,
   pub radius: f64,
   pub transform: Matrix,
+  pub material: Material,
 }
 
 impl Sphere {
@@ -20,15 +22,27 @@ impl Sphere {
       center: Point::default(),
       radius: 1.0,
       transform: Matrix::identity(),
+      material: Material::default(),
     }
   }
 
   /// Create a new sphere.
-  pub fn new(center: Point, radius: f64, transform: Matrix) -> Self {
+  pub fn new(center: Point, radius: f64, transform: Matrix, material: Material) -> Self {
     Sphere {
       center,
       radius,
       transform,
+      material,
+    }
+  }
+
+  /// Create a new glass sphere.
+  pub fn glass() -> Self {
+    Sphere {
+      center: Point::default(),
+      radius: 1.0,
+      transform: Matrix::identity(),
+      material: Material::glass(),
     }
   }
 

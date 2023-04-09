@@ -34,6 +34,10 @@ impl Vector {
       self.0 * other.1 - self.1 * other.0,
     )
   }
+
+  pub fn reflect(self, normal: Vector) -> Self {
+    self - normal * 2.0 * self.dot(normal)
+  }
 }
 
 impl Add for Vector {

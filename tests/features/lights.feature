@@ -6,3 +6,4 @@ Scenario: A point light has a position and intensity
   When light ← point_light(position, intensity)
   Then light.position = position
     And light.intensity = intensity
+

@@ -8,6 +8,10 @@ use std::ops::Sub;
 pub struct Color(pub f64, pub f64, pub f64);
 
 impl Color {
+  pub fn new(r: f64, g: f64, b: f64) -> Self {
+    Color(r, g, b)
+  }
+
   pub fn abs(self) -> Self {
     Color(self.0.abs(), self.1.abs(), self.2.abs())
   }
