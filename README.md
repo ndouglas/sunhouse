@@ -25,14 +25,14 @@ Progress:
   - [x] Chaining Transformations
 - [x] Ray-Sphere Intersections
   - [x] Creating Rays
-  - [ ] Intersecting Rays With Spheres
-  - [ ] Tracking Intersections
-  - [ ] Identifying Hits
-  - [ ] Transforming Rays and Spheres
-- [ ] Light and Shading
-  - [ ] Surface Normals
-  - [ ] Reflecting Vectors
-  - [ ] The Phong Reflection Model
+  - [x] Intersecting Rays With Spheres
+  - [x] Tracking Intersections
+  - [x] Identifying Hits
+  - [x] Transforming Rays and Spheres
+- [x] Light and Shading
+  - [x] Surface Normals
+  - [x] Reflecting Vectors
+  - [x] The Phong Reflection Model
 - [ ] Making a Scene
   - [ ] Building a World
   - [ ] Defining a View Transformation
