@@ -56,3 +56,9 @@ impl Mul for Color {
     Color(self.0 * other.0, self.1 * other.1, self.2 * other.2)
   }
 }
+
+impl From<(f64, f64, f64)> for Color {
+  fn from(tuple: (f64, f64, f64)) -> Self {
+    Color::new(tuple.0, tuple.1, tuple.2)
+  }
+}

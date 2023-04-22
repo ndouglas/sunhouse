@@ -70,6 +70,14 @@ impl Sphere {
       ]
     }
   }
+
+  /// Apply a transformation to the sphere.
+  pub fn with_transform(self, transform: Matrix) -> Self {
+    Sphere {
+      transform: self.transform * transform,
+      ..self
+    }
+  }
 }
 
 impl Default for Sphere {

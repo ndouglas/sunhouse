@@ -13,3 +13,4 @@ pub mod ray;
 pub mod sphere;
 pub mod tuple;
 pub mod vector;
+pub mod world;

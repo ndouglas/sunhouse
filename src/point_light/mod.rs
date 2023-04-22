@@ -37,3 +37,9 @@ impl PointLight {
     ambient + diffuse + specular
   }
 }
+
+impl From<(Point, Color)> for PointLight {
+  fn from(tuple: (Point, Color)) -> Self {
+    PointLight::new(tuple.0, tuple.1)
+  }
+}

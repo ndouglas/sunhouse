@@ -1,3 +1,5 @@
+use crate::color::Color;
+use crate::point_light::PointLight;
 use crate::vector::Vector;
 use std::ops::Add;
 use std::ops::Div;
@@ -12,6 +14,10 @@ pub struct Point(pub f64, pub f64, pub f64);
 impl Point {
   pub fn abs(self) -> Self {
     Point(self.0.abs(), self.1.abs(), self.2.abs())
+  }
+
+  pub fn into_light(self, intensity: Color) -> PointLight {
+    PointLight::new(self, intensity)
   }
 }
 
@@ -68,5 +74,11 @@ impl Mul<f64> for Point {
 
   fn mul(self, other: f64) -> Self {
     Point(self.0 * other, self.1 * other, self.2 * other)
+  }
+}
+
+impl From<(f64, f64, f64)> for Point {
+  fn from(tuple: (f64, f64, f64)) -> Self {
+    Point(tuple.0, tuple.1, tuple.2)
   }
 }

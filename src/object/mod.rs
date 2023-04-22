@@ -1,4 +1,5 @@
 use crate::intersection::Intersection;
+use crate::matrix::Matrix;
 use crate::ray::Ray;
 use crate::sphere::Sphere;
 
@@ -13,6 +14,18 @@ impl Object {
   pub fn intersect(self, ray: Ray) -> Vec<Intersection> {
     match self {
       Object::Sphere(sphere) => sphere.intersect(ray),
+    }
+  }
+
+  /// Create a sphere.
+  pub fn sphere() -> Self {
+    Object::Sphere(Sphere::default())
+  }
+
+  /// Apply a transformation to the object.
+  pub fn with_transform(self, transform: Matrix) -> Self {
+    match self {
+      Object::Sphere(sphere) => Object::Sphere(sphere.with_transform(transform)),
     }
   }
 }

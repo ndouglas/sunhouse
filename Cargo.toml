@@ -57,3 +57,7 @@ harness = false
 [[test]]
 name = "materials"
 harness = false
+
+[[test]]
+name = "world"
+harness = false
