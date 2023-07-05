@@ -13,17 +13,19 @@ pub struct Comps {
   pub point: Point,
   pub eyev: Vector,
   pub normalv: Vector,
+  pub inside: bool,
 }
 
 impl Comps {
   /// Create a new `Comps` structure.
-  pub fn new(t: f64, object: Object, point: Point, eyev: Vector, normalv: Vector) -> Self {
+  pub fn new(t: f64, object: Object, point: Point, eyev: Vector, normalv: Vector, inside: bool) -> Self {
     Comps {
       t,
       object,
       point,
       eyev,
       normalv,
+      inside,
     }
   }
 
@@ -31,7 +33,9 @@ impl Comps {
   pub fn prepare(intersection: Intersection, ray: Ray) -> Self {
     let point = ray.position(intersection.t);
     let eyev = -ray.direction;
-    let normalv = intersection.object.normal_at(point);
-    Comps::new(intersection.t, intersection.object, point, eyev, normalv)
+    let mut normalv = intersection.object.normal_at(point);
+    let inside = normalv.dot(eyev) < 0.0;
+    normalv = if inside { -normalv } else { normalv };
+    Comps::new(intersection.t, intersection.object, point, eyev, normalv, inside)
   }
 }

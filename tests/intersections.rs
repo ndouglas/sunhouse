@@ -1,18 +1,17 @@
 #[allow(clippy::too_many_arguments)]
 use assert_approx_eq::assert_approx_eq;
-use cucumber::gherkin::Step;
+
 use cucumber::{given, then, when, World};
-use sunhouse::color::Color;
+
 use sunhouse::comps::Comps;
 use sunhouse::intersection::Intersection;
 use sunhouse::object::Object;
 use sunhouse::point::Point;
-use sunhouse::point_light::PointLight;
+
 use sunhouse::ray::Ray;
 use sunhouse::sphere::Sphere;
 
 use sunhouse::vector::Vector;
-use sunhouse::world::World as RenderWorld;
 
 // `TestWorld` is your shared, likely mutable state.
 // Cucumber constructs it via `Default::default()` for each scenario.
@@ -96,6 +95,11 @@ fn comps_normalv_is(world: &mut TestWorld, x: f64, y: f64, z: f64) {
   assert_approx_eq!(world.comps.normalv.0, x);
   assert_approx_eq!(world.comps.normalv.1, y);
   assert_approx_eq!(world.comps.normalv.2, z);
+}
+
+#[then(regex = r#"^comps\.inside = (true|false)$"#)]
+fn comps_inside_is(world: &mut TestWorld, inside: bool) {
+  assert_eq!(world.comps.inside, inside);
 }
 
 // This runs before everything else, so you can setup things here.

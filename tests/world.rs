@@ -68,7 +68,7 @@ fn sphere_is(world: &mut TestWorld, sid: String, step: &Step) {
         "material.color" => {
           let mut color = Color::default();
           // Decode a tuple of 3 floats.
-          let stripped = value.replace('(', "").replace(')', "");
+          let stripped = value.replace(['(', ')'], "");
           // Split into three values via comma and trim whitespace, then collect into a Vec.
           let mut values = stripped.split(',').map(|s| s.trim());
           color.0 = values.next().unwrap().parse::<f64>().unwrap();
