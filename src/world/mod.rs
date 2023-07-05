@@ -1,3 +1,4 @@
+use crate::intersection::Intersection;
 use crate::material::Material;
 use crate::matrix::Matrix;
 use crate::matrix::Matrix4x4;
@@ -19,9 +20,21 @@ impl World {
   pub fn empty() -> Self {
     World::new(vec![], vec![])
   }
+
   /// Create a new world.
   pub fn new(objects: Vec<Object>, lights: Vec<PointLight>) -> Self {
     World { objects, lights }
+  }
+
+  /// Calculate the intersections between the world and the given ray as
+  /// a collection of intersections.
+  pub fn intersect(&self, ray: crate::ray::Ray) -> Vec<Intersection> {
+    let mut intersections = vec![];
+    for object in &self.objects {
+      intersections.append(&mut object.intersect(ray));
+    }
+    intersections.sort_by(|a, b| a.t.partial_cmp(&b.t).unwrap());
+    intersections
   }
 }
 

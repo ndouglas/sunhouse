@@ -163,7 +163,7 @@ fn set_transform_s_m(world: &mut TestWorld) {
 fn n_is_normal_at_point2(world: &mut TestWorld) {
   world
     .shape
-    .normal_at(Point(0.0, 2.0_f64.sqrt() / 2.0, -2.0_f64.sqrt() / 2.0));
+    .normal_at(Point(0.0, 2.0_f64.sqrt() / 2.0, -(2.0_f64.sqrt()) / 2.0));
 }
 
 #[when(regex = r#"^m ← s.material$"#)]

@@ -1,15 +1,8 @@
-#[allow(clippy::too_many_arguments)]
-use assert_approx_eq::assert_approx_eq;
 use cucumber::{given, then, when, World};
 use sunhouse::color::Color;
-use sunhouse::intersection::Intersection;
-use sunhouse::matrix::Matrix;
-use sunhouse::object::Object;
+
 use sunhouse::point::Point;
 use sunhouse::point_light::PointLight;
-use sunhouse::ray::Ray;
-use sunhouse::sphere::Sphere;
-use sunhouse::vector::Vector;
 
 // `TestWorld` is your shared, likely mutable state.
 // Cucumber constructs it via `Default::default()` for each scenario.
