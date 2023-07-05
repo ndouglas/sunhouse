@@ -20,3 +20,12 @@ impl Intersection {
     ray.position(self.t)
   }
 }
+
+impl Default for Intersection {
+  fn default() -> Self {
+    Intersection {
+      t: 0.0,
+      object: Object::default(),
+    }
+  }
+}

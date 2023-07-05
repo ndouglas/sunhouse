@@ -28,4 +28,17 @@ impl Object {
       Object::Sphere(sphere) => Object::Sphere(sphere.with_transform(transform)),
     }
   }
+
+  /// Calculate the normal vector at the given point on the object.
+  pub fn normal_at(self, point: crate::point::Point) -> crate::vector::Vector {
+    match self {
+      Object::Sphere(sphere) => sphere.normal_at(point),
+    }
+  }
+}
+
+impl Default for Object {
+  fn default() -> Self {
+    Object::Sphere(Sphere::default())
+  }
 }

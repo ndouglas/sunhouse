@@ -61,3 +61,7 @@ harness = false
 [[test]]
 name = "world"
 harness = false
+
+[[test]]
+name = "intersections"
+harness = false
