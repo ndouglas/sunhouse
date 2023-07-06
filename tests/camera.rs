@@ -1,16 +1,11 @@
 #[allow(clippy::too_many_arguments)]
 use assert_approx_eq::assert_approx_eq;
-
 use cucumber::{given, then, when, World};
 use sunhouse::camera::Camera;
 use sunhouse::canvas::Canvas;
-
 use sunhouse::matrix::Matrix;
-
 use sunhouse::point::Point;
-
 use sunhouse::ray::Ray;
-
 use sunhouse::vector::Vector;
 use sunhouse::world::World as RenderWorld;
 

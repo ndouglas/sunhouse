@@ -35,8 +35,8 @@ Progress:
   - [x] The Phong Reflection Model
 - [ ] Making a Scene
   - [x] Building a World
-  - [ ] Defining a View Transformation
-  - [ ] Implementing a Camera
+  - [x] Defining a View Transformation
+  - [x] Implementing a Camera
 - [ ] Shadows
   - [ ] Lighting in Shadows
   - [ ] Testing for Shadows

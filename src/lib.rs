@@ -5,6 +5,7 @@ pub mod camera;
 pub mod canvas;
 pub mod color;
 pub mod comps;
+pub mod hit;
 pub mod intersection;
 pub mod material;
 pub mod matrix;

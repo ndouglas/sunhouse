@@ -1,7 +1,8 @@
 use crate::color::Color;
-use png::{BitDepth, ColorType, Encoder, SourceChromaticities};
+use png::{BitDepth, ColorType, Encoder};
 use std::fs::File;
 use std::io::BufWriter;
+use std::io::Write;
 use std::path::Path;
 
 /// A Canvas of pixels.
@@ -31,7 +32,8 @@ impl Canvas {
 
   /// Convert to a PPM file.
   pub fn to_ppm(&self) -> String {
-    let mut ppm = "P3\n5 3\n255".to_string();
+    let mut ppm = "P3\n".to_string();
+    ppm.push_str(&format!("{} {}\n255", self.width, self.height));
     for y in 0..self.height {
       ppm.push('\n');
       for x in 0..self.width {
@@ -51,21 +53,27 @@ impl Canvas {
     ppm
   }
 
+  /// Write the PPM to a file.
+  pub fn save_ppm(&self, path: &Path) {
+    let ppm = self.to_ppm();
+    let display = path.display();
+    let mut file = match File::create(path) {
+      Err(why) => panic!("couldn't create {}: {}", display, why),
+      Ok(file) => file,
+    };
+    match file.write_all(ppm.as_bytes()) {
+      Err(why) => panic!("couldn't write to {}: {}", display, why),
+      Ok(_) => println!("successfully wrote to {}", display),
+    }
+  }
+
   /// Convert to a PNG file.
   pub fn to_png(&self, path: &Path) {
     let file = File::create(path).unwrap();
     let w = &mut BufWriter::new(file);
     let mut encoder = Encoder::new(w, self.width as u32, self.height as u32);
-    encoder.set_color(ColorType::Rgba);
+    encoder.set_color(ColorType::Rgb);
     encoder.set_depth(BitDepth::Eight);
-    encoder.set_source_gamma(png::ScaledFloat::new(1.0 / 2.2));
-    let source_chromaticities = SourceChromaticities::new(
-      (0.31270, 0.32900),
-      (0.64000, 0.33000),
-      (0.30000, 0.60000),
-      (0.15000, 0.06000),
-    );
-    encoder.set_source_chromaticities(source_chromaticities);
     let mut writer = encoder.write_header().unwrap();
     let data = self
       .pixels
@@ -74,8 +82,7 @@ impl Canvas {
         let r = (color.0 * 256.0) as u8;
         let g = (color.1 * 256.0) as u8;
         let b = (color.2 * 256.0) as u8;
-        let a = 255;
-        vec![r, g, b, a]
+        vec![r, g, b]
       })
       .collect::<Vec<u8>>();
     writer.write_image_data(&data).unwrap(); // Save

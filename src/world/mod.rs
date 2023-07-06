@@ -2,6 +2,7 @@ use crate::camera::Camera;
 use crate::canvas::Canvas;
 use crate::color::Color;
 use crate::comps::Comps;
+use crate::hit::Hit;
 use crate::intersection::Intersection;
 use crate::material::Material;
 use crate::matrix::Matrix;
@@ -64,14 +65,14 @@ impl World {
   pub fn color_at(&self, ray: Ray) -> Color {
     let intersections = self.intersect(ray);
     // Find the hit, if any.
-    let hit = intersections.iter().find(|i| i.t >= 0.0);
+    let hit = intersections.hit();
     // If there was no hit, return black.
     if hit.is_none() {
       return Color::new(0.0, 0.0, 0.0);
     }
     // Otherwise, calculate the color at the hit.
     let hit = hit.unwrap();
-    let comps = self.prepare_computations(*hit, ray);
+    let comps = self.prepare_computations(hit, ray);
 
     self.shade_hit(comps)
   }
