@@ -1,3 +1,5 @@
+use crate::camera::Camera;
+use crate::canvas::Canvas;
 use crate::color::Color;
 use crate::comps::Comps;
 use crate::intersection::Intersection;
@@ -72,6 +74,16 @@ impl World {
     let comps = self.prepare_computations(*hit, ray);
 
     self.shade_hit(comps)
+  }
+
+  /// Render the world.
+  pub fn render(&self, camera: &Camera) -> Canvas {
+    camera.render(self)
+  }
+
+  /// Render the world as a PNG.
+  pub fn render_png(&self, camera: &Camera, filename: &str) {
+    camera.render_png(self, filename)
   }
 }
 

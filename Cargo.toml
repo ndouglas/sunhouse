@@ -20,6 +20,7 @@ name = "sunhouse"
 path = "src/main.rs"
 
 [dependencies]
+png = "0.17.9"
 
 [dev-dependencies]
 assert_approx_eq = "1.1"
@@ -64,4 +65,8 @@ harness = false
 
 [[test]]
 name = "intersections"
+harness = false
+
+[[test]]
+name = "camera"
 harness = false
