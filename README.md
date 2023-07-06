@@ -34,7 +34,7 @@ Progress:
   - [x] Reflecting Vectors
   - [x] The Phong Reflection Model
 - [ ] Making a Scene
-  - [ ] Building a World
+  - [x] Building a World
   - [ ] Defining a View Transformation
   - [ ] Implementing a Camera
 - [ ] Shadows

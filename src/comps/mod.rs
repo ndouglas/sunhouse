@@ -6,7 +6,7 @@ use crate::vector::Vector;
 
 /// A data structure encapsulating some precomputed information relating to the
 /// intersection.
-#[derive(Debug, Default, Clone)]
+#[derive(Copy, Debug, Default, Clone)]
 pub struct Comps {
   pub t: f64,
   pub object: Object,

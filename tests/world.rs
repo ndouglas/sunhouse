@@ -3,13 +3,13 @@ use assert_approx_eq::assert_approx_eq;
 use cucumber::gherkin::Step;
 use cucumber::{given, then, when, World};
 use sunhouse::color::Color;
+use sunhouse::comps::Comps;
 use sunhouse::intersection::Intersection;
 use sunhouse::object::Object;
 use sunhouse::point::Point;
 use sunhouse::point_light::PointLight;
 use sunhouse::ray::Ray;
 use sunhouse::sphere::Sphere;
-
 use sunhouse::vector::Vector;
 use sunhouse::world::World as RenderWorld;
 
@@ -23,6 +23,12 @@ pub struct TestWorld {
   pub s1: Sphere,
   pub s2: Sphere,
   pub xs: Vec<Intersection>,
+  pub comps: Comps,
+  pub c: Color,
+  pub shape: Object,
+  pub i: Intersection,
+  pub outer_index: usize,
+  pub inner_index: usize,
 }
 
 #[given(regex = r#"^w ← world\(\)$"#)]
@@ -160,6 +166,85 @@ fn xs_count(world: &mut TestWorld, count: usize) {
 #[then(regex = r#"^xs\[(\d+)\].t = (\d+\.?\d*)$"#)]
 fn xs_t(world: &mut TestWorld, index: usize, t: f64) {
   assert_approx_eq!(world.xs[index].t, t);
+}
+
+#[when(regex = r#"^c ← color_at\(w, r\)$"#)]
+fn color_at(world: &mut TestWorld) {
+  world.c = world.w.color_at(world.r);
+}
+
+#[given(regex = r#"^shape ← the first object in w$"#)]
+fn shape_is_first_object(world: &mut TestWorld) {
+  world.shape = world.w.objects[0];
+}
+
+#[given(regex = r#"^i ← intersection\((\d+\.?\d*), shape\)$"#)]
+fn intersection_is(world: &mut TestWorld, t: f64) {
+  world.i = Intersection::new(t, world.shape);
+}
+
+#[when(regex = r#"^comps ← prepare_computations\(i, r\)$"#)]
+fn prepare_computations(world: &mut TestWorld) {
+  world.comps = world.w.prepare_computations(world.i, world.r);
+}
+
+#[when(
+  regex = r#"^w.light ← point_light\(point\((-?\d+\.?\d*), (-?\d+\.?\d*), (-?\d+\.?\d*)\), color\((-?\d+\.?\d*), (-?\d+\.?\d*), (-?\d+\.?\d*)\)\)$"#
+)]
+#[given(
+  regex = r#"^w.light ← point_light\(point\((-?\d+\.?\d*), (-?\d+\.?\d*), (-?\d+\.?\d*)\), color\((-?\d+\.?\d*), (-?\d+\.?\d*), (-?\d+\.?\d*)\)\)$"#
+)]
+fn w_light_is(world: &mut TestWorld, x: f64, y: f64, z: f64, r: f64, g: f64, b: f64) {
+  world.w.lights = vec![Point(x, y, z).into_light(Color::new(r, g, b))];
+}
+
+#[when(regex = r#"^c ← shade_hit\(w, comps\)$"#)]
+fn shade_hit(world: &mut TestWorld) {
+  world.c = world.w.shade_hit(world.comps);
+}
+
+#[then(regex = r#"^c = color\((-?\d+\.?\d*), (-?\d+\.?\d*), (-?\d+\.?\d*)\)$"#)]
+fn c_is(world: &mut TestWorld, r: f64, g: f64, b: f64) {
+  assert_approx_eq!(world.c.0, r, 1e-5);
+  assert_approx_eq!(world.c.1, g, 1e-5);
+  assert_approx_eq!(world.c.2, b, 1e-5);
+}
+
+#[given(regex = r#"^shape ← the second object in w$"#)]
+fn shape_is_second_object(world: &mut TestWorld) {
+  world.shape = world.w.objects[1];
+}
+
+#[given(regex = r#"^outer ← the first object in w$"#)]
+fn outer_is_first_object(world: &mut TestWorld) {
+  world.outer_index = 0;
+}
+
+#[given(regex = r#"^outer.material.ambient ← 1$"#)]
+fn outer_material_ambient(world: &mut TestWorld) {
+  // Update the sphere's material's ambient property.
+  if let Object::Sphere(ref mut sphere) = &mut world.w.objects[world.outer_index] {
+    sphere.material.ambient = 1.0;
+  }
+}
+
+#[given(regex = r#"^inner ← the second object in w$"#)]
+fn inner_is_second_object(world: &mut TestWorld) {
+  world.inner_index = 1;
+}
+
+#[given(regex = r#"^inner.material.ambient ← 1$"#)]
+fn inner_material_ambient(world: &mut TestWorld) {
+  if let Object::Sphere(ref mut sphere) = &mut world.w.objects[world.inner_index] {
+    sphere.material.ambient = 1.0;
+  }
+}
+
+#[then(regex = r#"^c = inner.material.color$"#)]
+fn c_is_inner_material_color(world: &mut TestWorld) {
+  if let Object::Sphere(sphere) = &world.w.objects[world.inner_index] {
+    assert_eq!(world.c, sphere.material.color);
+  }
 }
 
 // This runs before everything else, so you can setup things here.

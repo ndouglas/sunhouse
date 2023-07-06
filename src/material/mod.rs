@@ -1,4 +1,7 @@
 use crate::color::Color;
+use crate::point::Point;
+use crate::point_light::PointLight;
+use crate::vector::Vector;
 
 /// Encapsulates the surface color and attributes from the reflection model.
 #[derive(Clone, Copy, Debug, PartialEq, PartialOrd)]
@@ -29,6 +32,10 @@ impl Material {
       specular: 0.9,
       shininess: 200.0,
     }
+  }
+
+  pub fn lighting(self, light: PointLight, point: Point, eye: Vector, normal: Vector) -> Color {
+    light.light(self, point, eye, normal)
   }
 }
 

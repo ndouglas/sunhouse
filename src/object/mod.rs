@@ -35,6 +35,13 @@ impl Object {
       Object::Sphere(sphere) => sphere.normal_at(point),
     }
   }
+
+  /// Get the material of the object.
+  pub fn material(self) -> crate::material::Material {
+    match self {
+      Object::Sphere(sphere) => sphere.material,
+    }
+  }
 }
 
 impl Default for Object {
