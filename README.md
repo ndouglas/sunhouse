@@ -29,17 +29,17 @@ Progress:
   - [x] Tracking Intersections
   - [x] Identifying Hits
   - [x] Transforming Rays and Spheres
-  - ![example5](./examples/example5.png)
+![example5](./examples/example5.png)
 - [x] Light and Shading
   - [x] Surface Normals
   - [x] Reflecting Vectors
   - [x] The Phong Reflection Model
-  - ![example6](./examples/example6.png)
+![example6](./examples/example6.png)
 - [x] Making a Scene
   - [x] Building a World
   - [x] Defining a View Transformation
   - [x] Implementing a Camera
-  - ![example7](./examples/example7.png)
+![example7](./examples/example7.png)
 - [ ] Shadows
   - [ ] Lighting in Shadows
   - [ ] Testing for Shadows
