@@ -115,7 +115,7 @@ pub fn main() {
     camera ← camera(100, 50, π/3)
     camera.transform ← view_transform(point(0, 1.5, -5), point(0, 1, 0), vector(0, 1, 0))
   */
-  let mut camera = Camera::new(100, 50, PI / 3.0);
+  let mut camera = Camera::new(256, 256, PI / 3.0);
   camera.transform = Matrix::view_transform(Point(0.0, 1.5, -5.0), Point(0.0, 1.0, 0.0), Vector(0.0, 1.0, 0.0));
 
   world.objects.push(Object::Sphere(left));
@@ -128,7 +128,5 @@ pub fn main() {
   /*
     canvas ← render(camera, world)
   */
-  let canvas = world.render(&camera);
-  canvas.to_ppm();
   world.render_png(&camera, "examples/example7.png");
 }

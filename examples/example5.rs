@@ -41,7 +41,7 @@ pub fn main() {
   let ray_origin = Point(0.0, 0.0, -5.0);
   let _wall_z = 10.0;
   let wall_size = 7.0;
-  let canvas_pixels = 1024;
+  let canvas_pixels = 256;
   let pixel_size = wall_size / (canvas_pixels as f64);
   let half = wall_size / 2.0;
   let mut canvas = Canvas::new(canvas_pixels, canvas_pixels);

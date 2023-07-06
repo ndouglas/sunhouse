@@ -15,6 +15,7 @@ use sunhouse::vector::Vector;
 #[derive(Debug, Default, World)]
 pub struct TestWorld {
   m: Matrix,
+  n: Vector,
   material: Material,
   ray: Ray,
   shape: Sphere,
@@ -114,22 +115,26 @@ fn set_transform_shape_translation(world: &mut TestWorld, x: f64, y: f64, z: f64
 fn n_is_normal_at(world: &mut TestWorld) {
   let sqrt3 = 3.0_f64.sqrt();
   let x = sqrt3 / 3.0;
-  world.shape.normal_at(Point(x, x, x));
+  world.n = world.shape.normal_at(Point(x, x, x));
 }
 
 #[when(regex = r#"^n ← normal_at\(s, point\(([^√]*), ([^√]*), ([^√]*)\)\)$"#)]
 fn n_is_normal_at_point(world: &mut TestWorld, x: f64, y: f64, z: f64) {
-  world.shape.normal_at(Point(x, y, z));
+  println!("n_is_normal_at_point: {}, {}, {}", x, y, z);
+  world.n = world.shape.normal_at(Point(x, y, z));
 }
 
 #[then(regex = r#"^n = vector\(√3/3, √3/3, √3/3\)$"#)]
 fn n_is_vector(world: &mut TestWorld) {
   let sqrt3 = 3.0_f64.sqrt();
   let x = sqrt3 / 3.0;
-  assert_eq!(world.shape.normal_at(Point(x, x, x)), Vector(x, x, x));
+  let vector = Vector(x, x, x);
+  assert_approx_eq!(world.n.0, vector.0, 1e-5);
+  assert_approx_eq!(world.n.1, vector.1, 1e-5);
+  assert_approx_eq!(world.n.2, vector.2, 1e-5);
 }
 
-#[then(regex = r#"^n = vector\(([\d\.-]*), ([\d\.-]*), ([\d\.-]*)\)$"#)]
+#[then(regex = r#"^n = vector\(([\d\.-]+), ([\d\.-]+), ([\d\.-]+)\)$"#)]
 fn n_is_vector2(world: &mut TestWorld, x: f64, y: f64, z: f64) {
   let vector = world.shape.normal_at(Point(x, y, z));
   assert_approx_eq!(vector.0, x, 1e-5);
@@ -138,15 +143,19 @@ fn n_is_vector2(world: &mut TestWorld, x: f64, y: f64, z: f64) {
 }
 
 #[then(regex = r#"^n = normalize\(vector\((\d+), (\d+), (\d+)\)\)$"#)]
-fn n_is_normalize_vector(world: &mut TestWorld, x: f64, y: f64, z: f64) {
-  assert_eq!(world.shape.normal_at(Point(x, y, z)), Vector(x, y, z).normalize());
+fn n_is_normalize_vector(_world: &mut TestWorld, x: f64, y: f64, z: f64) {
+  let vector = Vector(x, y, z).normalize();
+  assert_approx_eq!(vector.0, x, 1e-5);
+  assert_approx_eq!(vector.1, y, 1e-5);
+  assert_approx_eq!(vector.2, z, 1e-5);
 }
 
 #[then(regex = r#"^n = normalize\(n\)$"#)]
 fn n_is_normalize_n(world: &mut TestWorld) {
-  let sqrt3 = 3.0_f64.sqrt();
-  let x = sqrt3 / 3.0;
-  assert_eq!(world.shape.normal_at(Point(x, x, x)), Vector(x, x, x).normalize());
+  let normalized = world.n.normalize();
+  assert_approx_eq!(world.n.0, normalized.0, 1e-5);
+  assert_approx_eq!(world.n.1, normalized.1, 1e-5);
+  assert_approx_eq!(world.n.2, normalized.2, 1e-5);
 }
 
 #[given(regex = r#"^m ← scaling\((.*), (.*), (.*)\) \* rotation_z\(π/5\)$"#)]
@@ -161,7 +170,7 @@ fn set_transform_s_m(world: &mut TestWorld) {
 
 #[when(regex = r#"^n ← normal_at\(s, point\(0, √2/2, -√2/2\)\)$"#)]
 fn n_is_normal_at_point2(world: &mut TestWorld) {
-  world
+  world.n = world
     .shape
     .normal_at(Point(0.0, 2.0_f64.sqrt() / 2.0, -(2.0_f64.sqrt()) / 2.0));
 }

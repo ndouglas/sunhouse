@@ -48,7 +48,11 @@ impl Sphere {
 
   /// Compute the normal vector at the given point on the sphere.
   pub fn normal_at(self, point: Point) -> Vector {
-    (point - self.center).normalize()
+    // (point - self.center).normalize()
+    let object_point = self.transform.inverse() * point;
+    let object_normal = object_point - Point::default();
+    let world_normal = self.transform.inverse().transpose() * object_normal;
+    world_normal.normalize()
   }
 
   /// Compute the intersections between the ray and the sphere.

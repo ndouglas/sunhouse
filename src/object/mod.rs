@@ -1,7 +1,9 @@
 use crate::intersection::Intersection;
 use crate::matrix::Matrix;
+use crate::point::Point;
 use crate::ray::Ray;
 use crate::sphere::Sphere;
+use crate::vector::Vector;
 
 /// An enum for objects that can be intersected.
 #[derive(Clone, Copy, Debug, PartialEq)]
@@ -30,7 +32,7 @@ impl Object {
   }
 
   /// Calculate the normal vector at the given point on the object.
-  pub fn normal_at(self, point: crate::point::Point) -> crate::vector::Vector {
+  pub fn normal_at(self, point: Point) -> Vector {
     match self {
       Object::Sphere(sphere) => sphere.normal_at(point),
     }

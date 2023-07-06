@@ -147,7 +147,7 @@ fn image_is(world: &mut TestWorld) {
   world.image = world.w.render(&world.c);
 }
 
-#[then(regex = r#"^pixel_at\(image, (\d+), (\d+)\) = color\((\d+\.\d+), (\d+\.\d+), (\d+\.\d+)\)$"#)]
+#[then(regex = r#"^pixel_at\(image, (\d+), (\d+)\) = color\((-?\d+\.\d+), (-?\d+\.\d+), (-?\d+\.\d+)\)$"#)]
 fn pixel_at_is(world: &mut TestWorld, x: usize, y: usize, r: f64, g: f64, b: f64) {
   assert_approx_eq!(world.image.get_color_at(x, y).0, r, 1e-5);
   assert_approx_eq!(world.image.get_color_at(x, y).1, g, 1e-5);
