@@ -128,5 +128,5 @@ pub fn main() {
   /*
     canvas ← render(camera, world)
   */
-  world.render_png(&camera, "examples/example7.png");
+  world.render_png(&camera, "examples/example8.png");
 }

@@ -5,6 +5,8 @@ use cucumber::{given, then, when, World};
 use sunhouse::color::Color;
 use sunhouse::comps::Comps;
 use sunhouse::intersection::Intersection;
+
+use sunhouse::matrix::Matrix;
 use sunhouse::object::Object;
 use sunhouse::point::Point;
 use sunhouse::point_light::PointLight;
@@ -29,6 +31,7 @@ pub struct TestWorld {
   pub i: Intersection,
   pub outer_index: usize,
   pub inner_index: usize,
+  pub p: Point,
 }
 
 #[given(regex = r#"^w ← world\(\)$"#)]
@@ -113,14 +116,14 @@ fn sphere_is(world: &mut TestWorld, sid: String, step: &Step) {
             let x = values.next().unwrap().parse::<f64>().unwrap();
             let y = values.next().unwrap().parse::<f64>().unwrap();
             let z = values.next().unwrap().parse::<f64>().unwrap();
-            sunhouse::matrix::Matrix::scaling(x, y, z)
+            Matrix::scaling(x, y, z)
           } else if value.contains("translation") {
             let stripped = value.replace("translation(", "").replace(')', "");
             let mut values = stripped.split(',').map(|s| s.trim());
             let x = values.next().unwrap().parse::<f64>().unwrap();
             let y = values.next().unwrap().parse::<f64>().unwrap();
             let z = values.next().unwrap().parse::<f64>().unwrap();
-            sunhouse::matrix::Matrix::translation(x, y, z)
+            Matrix::translation(x, y, z)
           } else {
             panic!("Unknown transform: {}", value);
           };
@@ -245,6 +248,36 @@ fn c_is_inner_material_color(world: &mut TestWorld) {
   if let Object::Sphere(sphere) = &world.w.objects[world.inner_index] {
     assert_eq!(world.c, sphere.material.color);
   }
+}
+
+#[given(regex = r#"^p ← point\((-?\d+\.?\d*), (-?\d+\.?\d*), (-?\d+\.?\d*)\)$"#)]
+fn p_is_point(world: &mut TestWorld, x: f64, y: f64, z: f64) {
+  world.p = Point(x, y, z);
+}
+
+#[then(regex = r#"^is_shadowed\(w, p\) is (true|false)$"#)]
+fn is_shadowed_call(world: &mut TestWorld, is_shadowed: bool) {
+  assert_eq!(world.w.is_shadowed(world.p), is_shadowed);
+}
+
+#[given(regex = r#"^s1 ← sphere\(\)$"#)]
+fn s1_is_sphere(world: &mut TestWorld) {
+  world.s1 = Sphere::unit();
+}
+
+#[given(regex = r#"^s1 is added to w$"#)]
+fn s1_is_added_to_w(world: &mut TestWorld) {
+  world.w.objects.push(Object::Sphere(world.s1));
+}
+
+#[given(regex = r#"^s2 is added to w$"#)]
+fn s2_is_added_to_w(world: &mut TestWorld) {
+  world.w.objects.push(Object::Sphere(world.s2));
+}
+
+#[given(regex = r#"^i ← intersection\((\d+\.?\d*), s2\)$"#)]
+fn i_is_intersection(world: &mut TestWorld, t: f64) {
+  world.i = Intersection::new(t, Object::Sphere(world.s2));
 }
 
 // This runs before everything else, so you can setup things here.

@@ -34,8 +34,8 @@ impl Material {
     }
   }
 
-  pub fn lighting(self, light: PointLight, point: Point, eye: Vector, normal: Vector) -> Color {
-    light.light(self, point, eye, normal)
+  pub fn lighting(self, light: PointLight, point: Point, eye: Vector, normal: Vector, in_shadow: bool) -> Color {
+    light.light(self, point, eye, normal, in_shadow)
   }
 }
 

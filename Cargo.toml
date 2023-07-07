@@ -36,8 +36,8 @@ name = "example6"
 path = "examples/example6.rs"
 
 [[example]]
-name = "example7"
-path = "examples/example7.rs"
+name = "example8"
+path = "examples/example8.rs"
 
 
 [[test]]

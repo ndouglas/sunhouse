@@ -1,9 +1,11 @@
 #[allow(clippy::too_many_arguments)]
 use assert_approx_eq::assert_approx_eq;
+use cucumber::gherkin::Step;
 use cucumber::{given, then, when, World};
 use sunhouse::comps::Comps;
 use sunhouse::hit::Hit;
 use sunhouse::intersection::Intersection;
+use sunhouse::matrix::Matrix;
 use sunhouse::object::Object;
 use sunhouse::point::Point;
 use sunhouse::ray::Ray;
@@ -173,6 +175,46 @@ fn i_is_i3(world: &mut TestWorld) {
 #[then(regex = r#"^i = i4$"#)]
 fn i_is_i4(world: &mut TestWorld) {
   assert_eq!(world.i, Some(world.i4));
+}
+
+#[given(regex = r#"^shape ← sphere\(\) with:$"#)]
+fn shape_is_with(world: &mut TestWorld, step: &Step) {
+  if let Some(table) = step.table.as_ref() {
+    for line in table.rows.iter().skip(1) {
+      let key = line[0].to_string();
+      let value = line[1].to_string();
+      match key.as_str() {
+        "transform" => {
+          let transform = if value.contains("scaling") {
+            let stripped = value.replace("scaling(", "").replace(')', "");
+            let mut values = stripped.split(',').map(|s| s.trim());
+            let x = values.next().unwrap().parse::<f64>().unwrap();
+            let y = values.next().unwrap().parse::<f64>().unwrap();
+            let z = values.next().unwrap().parse::<f64>().unwrap();
+            Matrix::scaling(x, y, z)
+          } else if value.contains("translation") {
+            let stripped = value.replace("translation(", "").replace(')', "");
+            let mut values = stripped.split(',').map(|s| s.trim());
+            let x = values.next().unwrap().parse::<f64>().unwrap();
+            let y = values.next().unwrap().parse::<f64>().unwrap();
+            let z = values.next().unwrap().parse::<f64>().unwrap();
+            Matrix::translation(x, y, z)
+          } else {
+            panic!("Unknown transform: {}", value);
+          };
+          let mut sphere = Sphere::default();
+          sphere.transform = transform;
+          world.shape = Object::Sphere(sphere);
+        },
+        _ => panic!("Unknown key: {}", key),
+      }
+    }
+  }
+}
+
+#[then(regex = r#"^comps.over_point.z < -EPSILON/2$"#)]
+fn comps_over_point_z_is(world: &mut TestWorld) {
+  assert!(world.comps.over_point.2 < -0.0001 / 2.0);
 }
 
 // This runs before everything else, so you can setup things here.

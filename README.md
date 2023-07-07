@@ -40,10 +40,11 @@ Progress:
   - [x] Defining a View Transformation
   - [x] Implementing a Camera
   - ![example7](./examples/example7.png)
-- [ ] Shadows
-  - [ ] Lighting in Shadows
-  - [ ] Testing for Shadows
-  - [ ] Rendering Shadows
+- [x] Shadows
+  - [x] Lighting in Shadows
+  - [x] Testing for Shadows
+  - [x] Rendering Shadows
+  - ![example8](./examples/example8.png)
 - [ ] Planes
   - [ ] Refactoring Shapes
   - [ ] Implementing a Plane

@@ -82,13 +82,17 @@ fn light_is_point_light(world: &mut TestWorld, x: f64, y: f64, z: f64, r: f64, g
 
 #[then(regex = r#"^lighting\(m, light, position, eyev, normalv\) = color\((.*), (.*), (.*)\)$"#)]
 fn lighting_is_color(world: &mut TestWorld, r: f64, g: f64, b: f64) {
-  let c = world.light.light(world.m, world.position, world.eyev, world.normalv);
+  let c = world
+    .light
+    .light(world.m, world.position, world.eyev, world.normalv, false);
   assert_eq!(c, Color(r, g, b));
 }
 
 #[when(regex = r#"^result ← lighting\(m, light, position, eyev, normalv\)$"#)]
 fn result_is_lighting(world: &mut TestWorld) {
-  world.result = world.light.light(world.m, world.position, world.eyev, world.normalv);
+  world.result = world
+    .light
+    .light(world.m, world.position, world.eyev, world.normalv, false);
 }
 
 #[then(regex = r#"^result = color\((.*), (.*), (.*)\)$"#)]
@@ -106,6 +110,13 @@ fn eyev_is_vector3(world: &mut TestWorld) {
 #[given(regex = r#"^in_shadow ← true$"#)]
 fn in_shadow_is_true(world: &mut TestWorld) {
   world.in_shadow = true;
+}
+
+#[when(regex = r#"^result ← lighting\(m, light, position, eyev, normalv, in_shadow\)$"#)]
+fn result_is_lighting_in_shadow(world: &mut TestWorld) {
+  world.result = world
+    .light
+    .light(world.m, world.position, world.eyev, world.normalv, world.in_shadow);
 }
 
 // This runs before everything else, so you can setup things here.

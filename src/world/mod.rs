@@ -50,6 +50,7 @@ impl World {
 
   /// Calculate the color at the intersection encapsulated by comps.
   pub fn shade_hit(&self, comps: Comps) -> Color {
+    let in_shadow = self.is_shadowed(comps.over_point);
     // Iterate over the lights in the world, calculating the color at the
     // intersection for each light.
     self.lights.iter().fold(Color::new(0.0, 0.0, 0.0), |acc, light| {
@@ -57,7 +58,7 @@ impl World {
         + comps
           .object
           .material()
-          .lighting(*light, comps.point, comps.eyev, comps.normalv)
+          .lighting(*light, comps.point, comps.eyev, comps.normalv, in_shadow)
     })
   }
 
@@ -85,6 +86,21 @@ impl World {
   /// Render the world as a PNG.
   pub fn render_png(&self, camera: &Camera, filename: &str) {
     camera.render_png(self, filename)
+  }
+
+  /// Determine if the given point is in shadow.
+  pub fn is_shadowed(&self, point: Point) -> bool {
+    let v = self.lights[0].position - point;
+    let distance = v.magnitude();
+    let direction = v.normalize();
+    let r = Ray::new(point, direction);
+    let intersections = self.intersect(r);
+    let hit = intersections.hit();
+    if hit.is_none() {
+      return false;
+    }
+    let hit = hit.unwrap();
+    hit.t < distance
   }
 }
 

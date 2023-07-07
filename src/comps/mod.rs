@@ -14,11 +14,20 @@ pub struct Comps {
   pub eyev: Vector,
   pub normalv: Vector,
   pub inside: bool,
+  pub over_point: Point,
 }
 
 impl Comps {
   /// Create a new `Comps` structure.
-  pub fn new(t: f64, object: Object, point: Point, eyev: Vector, normalv: Vector, inside: bool) -> Self {
+  pub fn new(
+    t: f64,
+    object: Object,
+    point: Point,
+    eyev: Vector,
+    normalv: Vector,
+    inside: bool,
+    over_point: Point,
+  ) -> Self {
     Comps {
       t,
       object,
@@ -26,6 +35,7 @@ impl Comps {
       eyev,
       normalv,
       inside,
+      over_point,
     }
   }
 
@@ -36,6 +46,15 @@ impl Comps {
     let mut normalv = intersection.object.normal_at(point);
     let inside = normalv.dot(eyev) < 0.0;
     normalv = if inside { -normalv } else { normalv };
-    Comps::new(intersection.t, intersection.object, point, eyev, normalv, inside)
+    let over_point = point + normalv * 0.0001;
+    Comps::new(
+      intersection.t,
+      intersection.object,
+      point,
+      eyev,
+      normalv,
+      inside,
+      over_point,
+    )
   }
 }
