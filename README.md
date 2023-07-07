@@ -2,6 +2,8 @@
 
 A simple raytracer built in Rust as I work through _[The Ray Tracer Challenge](http://raytracerchallenge.com)_.
 
+You're of course welcome to poach whatever you want from this, but I'd advise you to probably just walk right on by my step definitions for the Cucumber tests, because they were written in the most absolutely brainless head-down one-thing-at-a-time I'm-the-Juggernaut way possible. Which is arguably fine for this sort of project, but, y'know.
+
 Progress:
 - [x] Tuples, Points, and Vectors
   - [x] Tuples
