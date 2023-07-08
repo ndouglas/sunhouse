@@ -67,7 +67,7 @@ fn intersection_is_shape(world: &mut TestWorld, t: f64) {
 
 #[when(regex = r#"^comps ← prepare_computations\(i, r\)$"#)]
 fn prepare_computations(world: &mut TestWorld) {
-  world.comps = Comps::prepare(&world.i.as_ref().unwrap(), world.r);
+  world.comps = Comps::prepare(world.i.as_ref().unwrap(), world.r);
 }
 
 #[then(regex = r#"^comps\.t = i\.t$"#)]

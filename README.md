@@ -47,9 +47,10 @@ Progress:
   - [x] Testing for Shadows
   - [x] Rendering Shadows
   - ![example8](./examples/example8.png)
-- [ ] Planes
-  - [ ] Refactoring Shapes
-  - [ ] Implementing a Plane
+- [x] Planes
+  - [x] Refactoring Shapes
+  - [x] Implementing a Plane
+  - ![example9](./examples/example9.png)
 - [ ] Patterns
   - [ ] Making a Striped Pattern
   - [ ] Transforming Patterns

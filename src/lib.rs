@@ -10,6 +10,7 @@ pub mod intersection;
 pub mod material;
 pub mod matrix;
 pub mod object;
+pub mod plane;
 pub mod point;
 pub mod point_light;
 pub mod ray;

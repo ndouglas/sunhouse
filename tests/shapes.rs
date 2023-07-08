@@ -131,7 +131,7 @@ fn set_transform_m(world: &mut TestWorld) {
 fn n_is_normal_at_point(world: &mut TestWorld) {
   world.n = world
     .s
-    .normal_at(Point(0.0, 2.0_f64.sqrt() / 2.0, -2.0_f64.sqrt() / 2.0));
+    .normal_at(Point(0.0, 2.0_f64.sqrt() / 2.0, -(2.0_f64.sqrt()) / 2.0));
 }
 
 #[then(regex = r#"^s\.parent is nothing$"#)]

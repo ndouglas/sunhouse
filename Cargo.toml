@@ -39,6 +39,9 @@ path = "examples/example6.rs"
 name = "example8"
 path = "examples/example8.rs"
 
+[[example]]
+name = "example9"
+path = "examples/example9.rs"
 
 [[test]]
 name = "tuples"
@@ -86,4 +89,8 @@ harness = false
 
 [[test]]
 name = "shapes"
+harness = false
+
+[[test]]
+name = "planes"
 harness = false
