@@ -56,7 +56,7 @@ impl Camera {
   }
 
   /// Render the world to a canvas.
-  pub fn render(&self, world: &World) -> Canvas {
+  pub fn render(&self, world: &mut World) -> Canvas {
     let mut canvas = Canvas::new(self.hsize, self.vsize);
     for y in 0..self.vsize {
       for x in 0..self.hsize {
@@ -69,7 +69,7 @@ impl Camera {
   }
 
   /// Render a PNG of the world.
-  pub fn render_png(&self, world: &World, filename: &str) {
+  pub fn render_png(&self, world: &mut World, filename: &str) {
     let canvas = self.render(world);
     canvas.to_png(Path::new(filename));
   }

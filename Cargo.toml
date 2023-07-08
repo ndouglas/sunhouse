@@ -83,3 +83,7 @@ harness = false
 [[test]]
 name = "camera"
 harness = false
+
+[[test]]
+name = "shapes"
+harness = false

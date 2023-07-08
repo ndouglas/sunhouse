@@ -14,6 +14,7 @@ pub mod point;
 pub mod point_light;
 pub mod ray;
 pub mod sphere;
+pub mod test_shape;
 pub mod tuple;
 pub mod vector;
 pub mod world;

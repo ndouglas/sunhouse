@@ -34,9 +34,9 @@ impl World {
 
   /// Calculate the intersections between the world and the given ray as
   /// a collection of intersections.
-  pub fn intersect(&self, ray: Ray) -> Vec<Intersection> {
+  pub fn intersect(&mut self, ray: Ray) -> Vec<Intersection> {
     let mut intersections = vec![];
-    for object in &self.objects {
+    for object in &mut self.objects {
       intersections.append(&mut object.intersect(ray));
     }
     intersections.sort_by(|a, b| a.t.partial_cmp(&b.t).unwrap());
@@ -49,7 +49,7 @@ impl World {
   }
 
   /// Calculate the color at the intersection encapsulated by comps.
-  pub fn shade_hit(&self, comps: Comps) -> Color {
+  pub fn shade_hit(&mut self, comps: Comps) -> Color {
     let in_shadow = self.is_shadowed(comps.over_point);
     // Iterate over the lights in the world, calculating the color at the
     // intersection for each light.
@@ -63,7 +63,7 @@ impl World {
   }
 
   /// Calculate the color at the ray.
-  pub fn color_at(&self, ray: Ray) -> Color {
+  pub fn color_at(&mut self, ray: Ray) -> Color {
     let intersections = self.intersect(ray);
     // Find the hit, if any.
     let hit = intersections.hit();
@@ -79,17 +79,17 @@ impl World {
   }
 
   /// Render the world.
-  pub fn render(&self, camera: &Camera) -> Canvas {
+  pub fn render(&mut self, camera: &Camera) -> Canvas {
     camera.render(self)
   }
 
   /// Render the world as a PNG.
-  pub fn render_png(&self, camera: &Camera, filename: &str) {
+  pub fn render_png(&mut self, camera: &Camera, filename: &str) {
     camera.render_png(self, filename)
   }
 
   /// Determine if the given point is in shadow.
-  pub fn is_shadowed(&self, point: Point) -> bool {
+  pub fn is_shadowed(&mut self, point: Point) -> bool {
     let v = self.lights[0].position - point;
     let distance = v.magnitude();
     let direction = v.normalize();
