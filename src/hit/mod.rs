@@ -12,6 +12,6 @@ impl Hit for Vec<Intersection> {
       .iter()
       .filter(|i| i.t >= 0.0)
       .min_by(|a, b| a.t.partial_cmp(&b.t).unwrap())
-      .copied()
+      .cloned()
   }
 }

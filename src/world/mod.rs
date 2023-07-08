@@ -44,12 +44,12 @@ impl World {
   }
 
   /// Prepare computations.
-  pub fn prepare_computations(&self, intersection: Intersection, ray: Ray) -> crate::comps::Comps {
+  pub fn prepare_computations(&self, intersection: &Intersection, ray: Ray) -> crate::comps::Comps {
     Comps::prepare(intersection, ray)
   }
 
   /// Calculate the color at the intersection encapsulated by comps.
-  pub fn shade_hit(&mut self, comps: Comps) -> Color {
+  pub fn shade_hit(&mut self, comps: &Comps) -> Color {
     let in_shadow = self.is_shadowed(comps.over_point);
     // Iterate over the lights in the world, calculating the color at the
     // intersection for each light.
@@ -73,9 +73,9 @@ impl World {
     }
     // Otherwise, calculate the color at the hit.
     let hit = hit.unwrap();
-    let comps = self.prepare_computations(hit, ray);
+    let comps = self.prepare_computations(&hit, ray);
 
-    self.shade_hit(comps)
+    self.shade_hit(&comps)
   }
 
   /// Render the world.
@@ -118,6 +118,7 @@ impl Default for World {
             specular: 0.2,
             ..Material::default()
           },
+          parent: None,
         }),
         Object::Sphere(Sphere {
           center: Point::default(),
@@ -135,6 +136,7 @@ impl Default for World {
             shininess: 200.0,
             ..Material::default()
           },
+          parent: None,
         }),
       ],
       lights: vec![PointLight::new((-10.0, 10.0, -10.0).into(), (1.0, 1.0, 1.0).into())],

@@ -5,14 +5,17 @@ use crate::object::Object;
 use crate::point::Point;
 use crate::ray::Ray;
 use crate::vector::Vector;
+use std::cell::RefCell;
+use std::rc::Rc;
 
 /// A sphere.
-#[derive(Clone, Copy, Debug, PartialEq, PartialOrd)]
+#[derive(Clone, Debug, PartialEq)]
 pub struct Sphere {
   pub center: Point,
   pub radius: f64,
   pub transform: Matrix,
   pub material: Material,
+  pub parent: Option<Rc<RefCell<Object>>>,
 }
 
 impl Sphere {
@@ -23,6 +26,7 @@ impl Sphere {
       radius: 1.0,
       transform: Matrix::identity(),
       material: Material::default(),
+      parent: None,
     }
   }
 
@@ -33,6 +37,7 @@ impl Sphere {
       radius,
       transform,
       material,
+      parent: None,
     }
   }
 
@@ -43,11 +48,12 @@ impl Sphere {
       radius: 1.0,
       transform: Matrix::identity(),
       material: Material::glass(),
+      parent: None,
     }
   }
 
   /// Compute the normal vector at the given point on the sphere.
-  pub fn normal_at(self, point: Point) -> Vector {
+  pub fn normal_at(&self, point: Point) -> Vector {
     // (point - self.center).normalize()
     let object_point = self.transform.inverse() * point;
     let object_normal = object_point - Point::default();
@@ -56,7 +62,7 @@ impl Sphere {
   }
 
   /// Compute the intersections between the ray and the sphere.
-  pub fn intersect(self, ray: Ray) -> Vec<Intersection> {
+  pub fn intersect(&self, ray: Ray) -> Vec<Intersection> {
     let ray2 = ray.transform(self.transform.inverse());
     let sphere_to_ray = ray2.origin - self.center;
     let a = ray2.direction.dot(ray2.direction);
@@ -69,17 +75,25 @@ impl Sphere {
       let t1 = (-b - discriminant.sqrt()) / (2.0 * a);
       let t2 = (-b + discriminant.sqrt()) / (2.0 * a);
       vec![
-        Intersection::new(t1, Object::Sphere(self)),
-        Intersection::new(t2, Object::Sphere(self)),
+        Intersection::new(t1, Object::Sphere(self.clone())),
+        Intersection::new(t2, Object::Sphere(self.clone())),
       ]
     }
   }
 
   /// Apply a transformation to the sphere.
-  pub fn with_transform(self, transform: Matrix) -> Self {
+  pub fn with_transform(&self, transform: Matrix) -> Self {
     Sphere {
       transform: self.transform * transform,
-      ..self
+      ..(*self).clone()
+    }
+  }
+
+  /// Return a clone of the sphere with a new material.
+  pub fn with_material(&self, material: Material) -> Self {
+    Sphere {
+      material,
+      ..(*self).clone()
     }
   }
 }

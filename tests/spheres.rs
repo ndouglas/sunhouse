@@ -72,7 +72,7 @@ fn xs_index_is(world: &mut TestWorld, idx: usize, x: f64) {
 
 #[then(regex = r#"^xs\[(\d+)\]\.object = shape$"#)]
 fn xs_index_object_is(world: &mut TestWorld, idx: usize) {
-  assert_eq!(world.xs[idx].object, Object::Sphere(world.shape));
+  assert_eq!(world.xs[idx].object, Object::Sphere(world.shape.clone()));
 }
 
 #[then(regex = r#"^s.transform = identity_matrix$"#)]

@@ -6,7 +6,7 @@ use crate::vector::Vector;
 
 /// A data structure encapsulating some precomputed information relating to the
 /// intersection.
-#[derive(Copy, Debug, Default, Clone)]
+#[derive(Debug, Default, Clone)]
 pub struct Comps {
   pub t: f64,
   pub object: Object,
@@ -40,7 +40,7 @@ impl Comps {
   }
 
   /// Prepare the `Comps` for a given ray and intersection.
-  pub fn prepare(intersection: Intersection, ray: Ray) -> Self {
+  pub fn prepare(intersection: &Intersection, ray: Ray) -> Self {
     let point = ray.position(intersection.t);
     let eyev = -ray.direction;
     let mut normalv = intersection.object.normal_at(point);
@@ -49,7 +49,7 @@ impl Comps {
     let over_point = point + normalv * 0.0001;
     Comps::new(
       intersection.t,
-      intersection.object,
+      intersection.object.clone(),
       point,
       eyev,
       normalv,

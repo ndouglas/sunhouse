@@ -35,17 +35,17 @@ fn sphere_is(world: &mut TestWorld) {
 
 #[when(regex = r#"^i ← intersection\((\d+\.?\d*), s\)$"#)]
 fn intersection_is(world: &mut TestWorld, t: f64) {
-  world.i = Some(Intersection::new(t, Object::Sphere(world.s)));
+  world.i = Some(Intersection::new(t, Object::Sphere(world.s.clone())));
 }
 
 #[then(regex = r#"^i\.t = (\d+\.?\d*)$"#)]
 fn intersection_t_is(world: &mut TestWorld, t: f64) {
-  assert_approx_eq!(world.i.unwrap().t, t);
+  assert_approx_eq!(world.i.as_ref().unwrap().t, t);
 }
 
 #[then(regex = r#"^i\.object = s$"#)]
 fn intersection_object_is(world: &mut TestWorld) {
-  assert_eq!(world.i.unwrap().object, Object::Sphere(world.s));
+  assert_eq!(world.i.as_ref().unwrap().object, Object::Sphere(world.s.clone()));
 }
 
 #[given(
@@ -62,22 +62,22 @@ fn shape_is(world: &mut TestWorld) {
 
 #[given(regex = r#"^i ← intersection\((\d+\.?\d*), shape\)$"#)]
 fn intersection_is_shape(world: &mut TestWorld, t: f64) {
-  world.i = Some(Intersection::new(t, world.shape));
+  world.i = Some(Intersection::new(t, world.shape.clone()));
 }
 
 #[when(regex = r#"^comps ← prepare_computations\(i, r\)$"#)]
 fn prepare_computations(world: &mut TestWorld) {
-  world.comps = Comps::prepare(world.i.unwrap(), world.r);
+  world.comps = Comps::prepare(&world.i.as_ref().unwrap(), world.r);
 }
 
 #[then(regex = r#"^comps\.t = i\.t$"#)]
 fn comps_t_is(world: &mut TestWorld) {
-  assert_approx_eq!(world.comps.t, world.i.unwrap().t);
+  assert_approx_eq!(world.comps.t, world.i.as_ref().unwrap().t);
 }
 
 #[then(regex = r#"^comps\.object = i\.object$"#)]
 fn comps_object_is(world: &mut TestWorld) {
-  assert_eq!(world.comps.object, world.i.unwrap().object);
+  assert_eq!(world.comps.object, world.i.as_ref().unwrap().object);
 }
 
 #[then(regex = r#"^comps\.point = point\((-?\d+\.?\d*), (-?\d+\.?\d*), (-?\d+\.?\d*)\)$"#)]
@@ -108,23 +108,23 @@ fn comps_inside_is(world: &mut TestWorld, inside: bool) {
 
 #[given(regex = r#"^i1 ← intersection\((-?\d+\.?\d*), s\)$"#)]
 fn i1_is(world: &mut TestWorld, t: f64) {
-  world.i1 = Intersection::new(t, Object::Sphere(world.s));
+  world.i1 = Intersection::new(t, Object::Sphere(world.s.clone()));
 }
 
 #[given(regex = r#"^i2 ← intersection\((-?\d+\.?\d*), s\)$"#)]
 fn i2_is(world: &mut TestWorld, t: f64) {
-  world.i2 = Intersection::new(t, Object::Sphere(world.s));
+  world.i2 = Intersection::new(t, Object::Sphere(world.s.clone()));
 }
 
 #[given(regex = r#"^xs ← intersections\(i1, i2\)$"#)]
 #[when(regex = r#"^xs ← intersections\(i1, i2\)$"#)]
 fn xs_is(world: &mut TestWorld) {
-  world.xs = vec![world.i1, world.i2];
+  world.xs = vec![world.i1.clone(), world.i2.clone()];
 }
 
 #[given(regex = r#"^xs ← intersections\(i2, i1\)$"#)]
 fn xs_is_reversed(world: &mut TestWorld) {
-  world.xs = vec![world.i2, world.i1];
+  world.xs = vec![world.i2.clone(), world.i1.clone()];
 }
 
 #[when(regex = r#"^i ← hit\(xs\)$"#)]
@@ -144,37 +144,37 @@ fn i_is_nothing(world: &mut TestWorld) {
 
 #[then(regex = r#"^i = i1$"#)]
 fn i_is_i1(world: &mut TestWorld) {
-  assert_eq!(world.i, Some(world.i1));
+  assert_eq!(world.i, Some(world.i1.clone()));
 }
 
 #[then(regex = r#"^i = i2$"#)]
 fn i_is_i2(world: &mut TestWorld) {
-  assert_eq!(world.i, Some(world.i2));
+  assert_eq!(world.i, Some(world.i2.clone()));
 }
 
 #[given(regex = r#"^i3 ← intersection\((-?\d+\.?\d*), s\)$"#)]
 fn i3_is(world: &mut TestWorld, t: f64) {
-  world.i3 = Intersection::new(t, Object::Sphere(world.s));
+  world.i3 = Intersection::new(t, Object::Sphere(world.s.clone()));
 }
 
 #[given(regex = r#"^i4 ← intersection\((-?\d+\.?\d*), s\)$"#)]
 fn i4_is(world: &mut TestWorld, t: f64) {
-  world.i4 = Intersection::new(t, Object::Sphere(world.s));
+  world.i4 = Intersection::new(t, Object::Sphere(world.s.clone()));
 }
 
 #[given(regex = r#"^xs ← intersections\(i1, i2, i3, i4\)$"#)]
 fn xs_is_many(world: &mut TestWorld) {
-  world.xs = vec![world.i1, world.i2, world.i3, world.i4];
+  world.xs = vec![world.i1.clone(), world.i2.clone(), world.i3.clone(), world.i4.clone()];
 }
 
 #[then(regex = r#"^i = i3$"#)]
 fn i_is_i3(world: &mut TestWorld) {
-  assert_eq!(world.i, Some(world.i3));
+  assert_eq!(world.i, Some(world.i3.clone()));
 }
 
 #[then(regex = r#"^i = i4$"#)]
 fn i_is_i4(world: &mut TestWorld) {
-  assert_eq!(world.i, Some(world.i4));
+  assert_eq!(world.i, Some(world.i4.clone()));
 }
 
 #[given(regex = r#"^shape ← sphere\(\) with:$"#)]

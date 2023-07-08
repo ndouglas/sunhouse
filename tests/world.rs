@@ -141,12 +141,12 @@ fn sphere_is(world: &mut TestWorld, sid: String, step: &Step) {
 
 #[then(regex = r#"^w contains s1$"#)]
 fn world_contains_s1(world: &mut TestWorld) {
-  assert_eq!(world.w.objects[0], Object::Sphere(world.s1));
+  assert_eq!(world.w.objects[0], Object::Sphere(world.s1.clone()));
 }
 
 #[then(regex = r#"^w contains s2$"#)]
 fn world_contains_s2(world: &mut TestWorld) {
-  assert_eq!(world.w.objects[1], Object::Sphere(world.s2));
+  assert_eq!(world.w.objects[1], Object::Sphere(world.s2.clone()));
 }
 
 #[given(
@@ -178,17 +178,17 @@ fn color_at(world: &mut TestWorld) {
 
 #[given(regex = r#"^shape ← the first object in w$"#)]
 fn shape_is_first_object(world: &mut TestWorld) {
-  world.shape = world.w.objects[0];
+  world.shape = world.w.objects[0].clone();
 }
 
 #[given(regex = r#"^i ← intersection\((\d+\.?\d*), shape\)$"#)]
 fn intersection_is(world: &mut TestWorld, t: f64) {
-  world.i = Intersection::new(t, world.shape);
+  world.i = Intersection::new(t, world.shape.clone());
 }
 
 #[when(regex = r#"^comps ← prepare_computations\(i, r\)$"#)]
 fn prepare_computations(world: &mut TestWorld) {
-  world.comps = world.w.prepare_computations(world.i, world.r);
+  world.comps = world.w.prepare_computations(&world.i, world.r);
 }
 
 #[when(
@@ -203,7 +203,7 @@ fn w_light_is(world: &mut TestWorld, x: f64, y: f64, z: f64, r: f64, g: f64, b: 
 
 #[when(regex = r#"^c ← shade_hit\(w, comps\)$"#)]
 fn shade_hit(world: &mut TestWorld) {
-  world.c = world.w.shade_hit(world.comps);
+  world.c = world.w.shade_hit(&world.comps);
 }
 
 #[then(regex = r#"^c = color\((-?\d+\.?\d*), (-?\d+\.?\d*), (-?\d+\.?\d*)\)$"#)]
@@ -215,7 +215,7 @@ fn c_is(world: &mut TestWorld, r: f64, g: f64, b: f64) {
 
 #[given(regex = r#"^shape ← the second object in w$"#)]
 fn shape_is_second_object(world: &mut TestWorld) {
-  world.shape = world.w.objects[1];
+  world.shape = world.w.objects[1].clone();
 }
 
 #[given(regex = r#"^outer ← the first object in w$"#)]
@@ -267,17 +267,17 @@ fn s1_is_sphere(world: &mut TestWorld) {
 
 #[given(regex = r#"^s1 is added to w$"#)]
 fn s1_is_added_to_w(world: &mut TestWorld) {
-  world.w.objects.push(Object::Sphere(world.s1));
+  world.w.objects.push(Object::Sphere(world.s1.clone()));
 }
 
 #[given(regex = r#"^s2 is added to w$"#)]
 fn s2_is_added_to_w(world: &mut TestWorld) {
-  world.w.objects.push(Object::Sphere(world.s2));
+  world.w.objects.push(Object::Sphere(world.s2.clone()));
 }
 
 #[given(regex = r#"^i ← intersection\((\d+\.?\d*), s2\)$"#)]
 fn i_is_intersection(world: &mut TestWorld, t: f64) {
-  world.i = Intersection::new(t, Object::Sphere(world.s2));
+  world.i = Intersection::new(t, Object::Sphere(world.s2.clone()));
 }
 
 // This runs before everything else, so you can setup things here.

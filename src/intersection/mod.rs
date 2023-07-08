@@ -3,7 +3,7 @@ use crate::point::Point;
 use crate::ray::Ray;
 
 /// An intersection is a point where two or more lines meet.
-#[derive(Clone, Copy, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq)]
 pub struct Intersection {
   pub t: f64,
   pub object: Object,
